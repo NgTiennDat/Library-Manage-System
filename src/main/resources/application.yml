@@ -1,1 +1,16 @@
-spring.application.name=lms
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lms
+    username: ${DB_UASERNAME:postgres}
+    password: ${DB_PASSWORD:tiendat1409}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
