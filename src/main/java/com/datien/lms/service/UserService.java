@@ -1,6 +1,6 @@
 package com.datien.lms.service;
 
-import com.datien.lms.dto.user.UserRequest;
+import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

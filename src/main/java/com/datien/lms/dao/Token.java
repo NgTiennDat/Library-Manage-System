@@ -19,4 +19,10 @@ public class Token {
 
     @Column(name = "TOKEN")
     private String token;
+
+    @Column(name = "EXPRIED")
+    private boolean expired;
+
+    @Column(name = "REVOKED")
+    private boolean revoked;
 }

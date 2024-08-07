@@ -1,4 +1,4 @@
-package com.datien.lms.dto.auth;
+package com.datien.lms.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @Builder
 public class AuthResponse {
-
     private String token;
+    private String notification;
 }

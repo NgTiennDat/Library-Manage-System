@@ -1,4 +1,4 @@
-package com.datien.lms.dto.auth;
+package com.datien.lms.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

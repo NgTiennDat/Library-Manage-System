@@ -1,7 +1,7 @@
 package com.datien.lms.service;
 
 import com.datien.lms.dao.User;
-import com.datien.lms.dto.user.UserRequest;
+import com.datien.lms.dto.request.UserRequest;
 import org.springframework.stereotype.Service;
 
 @Service

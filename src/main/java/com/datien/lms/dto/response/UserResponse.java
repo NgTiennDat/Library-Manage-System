@@ -1,4 +1,4 @@
-package com.datien.lms.dto.user;
+package com.datien.lms.dto.response;
 
 import lombok.*;
 

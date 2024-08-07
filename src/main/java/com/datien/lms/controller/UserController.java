@@ -1,6 +1,6 @@
 package com.datien.lms.controller;
 
-import com.datien.lms.dto.user.UserRequest;
+import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
