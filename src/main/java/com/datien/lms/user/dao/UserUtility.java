@@ -18,12 +18,17 @@ public class UserUtility {
     @Column(name = "ID")
     private Long id;
 
+    @Column(name = "FIRST_NAME")
     private String firstName;
+
+    @Column(name = "LAST_NAME")
     private String lastName;
 
+    @Column(name = "CREATED_BY")
     private String createdBy;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, insertable = false, name = "CREATED_DATE")
     private LocalDateTime createdDate;
+    @Column(name = "MODIFITED_DATE")
     private LocalDateTime modifiedDate;
 }
