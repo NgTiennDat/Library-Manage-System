@@ -1,6 +1,5 @@
-package com.datien.lms.role;
+package com.datien.lms.dao;
 
-import com.datien.lms.user.dao.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

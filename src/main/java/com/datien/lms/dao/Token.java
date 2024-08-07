@@ -1,4 +1,4 @@
-package com.datien.lms.token;
+package com.datien.lms.dao;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

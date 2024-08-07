@@ -1,8 +1,7 @@
-package com.datien.lms.user.controller;
+package com.datien.lms.controller;
 
-import com.datien.lms.user.dao.User;
-import com.datien.lms.user.dao.UserRequest;
-import com.datien.lms.user.service.UserService;
+import com.datien.lms.dto.user.UserRequest;
+import com.datien.lms.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
