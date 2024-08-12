@@ -6,6 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,4 +28,13 @@ public class Token {
 
     @Column(name = "REVOKED")
     private boolean revoked;
+
+    @Column(name = "CREATED_AT", nullable = false, insertable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "EXPIRED_AT")
+    private LocalDateTime expiredAt;
+
+    @Column(name = "VALIDATED_AT")
+    private LocalDateTime validatedAt;
 }
