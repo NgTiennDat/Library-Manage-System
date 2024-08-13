@@ -26,7 +26,7 @@ public class SecurityConfig {
     ) throws Exception {
         http
                 .csrf(Customizer.withDefaults())
-                .authorizeRequests(req -> req
+                .authorizeHttpRequests(req -> req
                         .requestMatchers("/api/v1/auth/**")
                         .permitAll()
                         .anyRequest()
