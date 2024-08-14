@@ -1,5 +1,6 @@
 package com.datien.lms.service;
 
+import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.repo.UserRepository;
@@ -18,12 +19,16 @@ public class UserService {
     private final JwtService jwtService;
 
     public void register(UserRequest request) {
+        
         var user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .enabled(false)
+                .role(Role.STUDENT)
                 .build();
+
+        userRepository.save(user);
 //        saveUserToken(savedUser, jwtToken);
 //        return AuthenticationResponse.builder()
 //                .accessToken(jwtToken)
