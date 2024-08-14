@@ -22,6 +22,7 @@ public class UserService {
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .enabled(false)
                 .build();
 //        saveUserToken(savedUser, jwtToken);
 //        return AuthenticationResponse.builder()
@@ -29,5 +30,6 @@ public class UserService {
 //                .refreshToken(refreshToken)
 //                .build();
     }
+
 }
 

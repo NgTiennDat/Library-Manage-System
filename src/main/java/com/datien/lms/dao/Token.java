@@ -1,17 +1,16 @@
 package com.datien.lms.dao;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 public class Token {
 
@@ -37,4 +36,10 @@ public class Token {
 
     @Column(name = "VALIDATED_AT")
     private LocalDateTime validatedAt;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "user_id", nullable = false
+    )
+    private User user;
 }

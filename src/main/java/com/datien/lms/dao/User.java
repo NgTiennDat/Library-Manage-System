@@ -33,8 +33,14 @@ public class User implements UserDetails {
     @Column(name = "PHONE_NUMBER")
     private String phone;
 
+    @Column(name = "ENABLE")
+    private boolean enabled;
+
     @OneToOne
     private Role role;
+//
+//    @OneToMany
+//    List<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
