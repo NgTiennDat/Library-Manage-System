@@ -29,11 +29,6 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
-//        saveUserToken(savedUser, jwtToken);
-//        return AuthenticationResponse.builder()
-//                .accessToken(jwtToken)
-//                .refreshToken(refreshToken)
-//                .build();
     }
 
 }
