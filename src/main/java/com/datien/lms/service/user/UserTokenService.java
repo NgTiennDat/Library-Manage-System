@@ -1,4 +1,4 @@
-package com.datien.lms.service;
+package com.datien.lms.service.user;
 
 import com.datien.lms.dao.Token;
 import com.datien.lms.dao.User;

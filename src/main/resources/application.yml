@@ -13,6 +13,17 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ntdat14092003@gmail.com
+    password: jibf hrmg vuib vxod
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 application:
   security:

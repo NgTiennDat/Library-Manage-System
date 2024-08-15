@@ -3,6 +3,7 @@ package com.datien.lms.controller;
 import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.dto.response.UserResponse;
 import com.datien.lms.service.user.UserService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(
             @RequestBody UserRequest request
-    ) {
+    ) throws MessagingException {
         return ResponseEntity.ok(userService.register(request));
     }
 }

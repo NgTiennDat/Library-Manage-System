@@ -5,7 +5,9 @@ import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.dto.response.UserResponse;
 import com.datien.lms.repo.UserRepository;
+import com.datien.lms.service.EmailService;
 import com.datien.lms.utils.JwtService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,8 +19,11 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+    private final JwtService jwtService;
+    private final UserTokenService userTokenService;
 
-    public UserResponse register(UserRequest request) {
+    public UserResponse register(UserRequest request) throws MessagingException {
         
         var user = User.builder()
                 .firstname(request.getFirstname())
@@ -31,6 +36,7 @@ public class UserService {
                 .build();
 
         var savedUser = userRepository.save(user);
+        emailService.sendValidEmail(user);
         return userMapper.toUserResponse(savedUser);
     }
 
