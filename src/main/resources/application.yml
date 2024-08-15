@@ -1,10 +1,7 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/lms
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:tiendat1409}
     driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: create-drop

@@ -1,7 +1,8 @@
 package com.datien.lms.controller;
 
 import com.datien.lms.dto.request.UserRequest;
-import com.datien.lms.service.UserService;
+import com.datien.lms.dto.response.UserResponse;
+import com.datien.lms.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,17 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/asd")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(
+    public ResponseEntity<UserResponse> register(
             @RequestBody UserRequest request
     ) {
-        userService.register(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(userService.register(request));
     }
 
 }

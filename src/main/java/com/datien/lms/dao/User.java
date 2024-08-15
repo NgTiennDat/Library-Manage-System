@@ -21,8 +21,11 @@ public class User implements UserDetails {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "USER_NAME")
-    private String username;
+    @Column(name = "FIRST_NAME")
+    private String firstname;
+
+    @Column(name = "LAST_NAME")
+    private String lastname;
 
     @Column(name = "PASSWORD")
     private String password;
@@ -36,7 +39,7 @@ public class User implements UserDetails {
     @Column(name = "ENABLE")
     private boolean enabled;
 
-    @OneToOne
+    @Enumerated(EnumType.STRING)
     private Role role;
 //
 //    @OneToMany
@@ -45,6 +48,11 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
     }
 
     @Override

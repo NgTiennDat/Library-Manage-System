@@ -1,0 +1,30 @@
+package com.datien.lms.service.user;
+
+import com.datien.lms.dao.Role;
+import com.datien.lms.dao.User;
+import com.datien.lms.dto.request.UserRequest;
+import com.datien.lms.dto.response.UserResponse;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserMapper {
+    public User toUser(UserRequest request) {
+        var user = new User();
+        user.setFirstname(request.getFirstname());
+        user.setLastname(request.getLastname());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setRole(Role.STUDENT);
+        user.setPhone("");
+        return null;
+    }
+
+    public UserResponse toUserResponse(User user) {
+        var userResponse = new UserResponse();
+        userResponse.setFirstname(user.getFirstname());
+        userResponse.setLastname(user.getLastname());
+        userResponse.setEmail(user.getEmail());
+        userResponse.setNotification("Successfully register account!");
+        return userResponse;
+    }
+}

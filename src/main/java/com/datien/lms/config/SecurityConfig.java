@@ -27,7 +27,8 @@ public class SecurityConfig {
         http
                 .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/api/v1/auth/**")
+                        .requestMatchers("/api/v1/auth/**",
+                                "api/v1/user/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated()
