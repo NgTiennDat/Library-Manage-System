@@ -1,6 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/lms
+    username: postgres
+    password: tiendat1409
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
