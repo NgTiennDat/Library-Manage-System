@@ -16,15 +16,18 @@ public class UserMapper {
         user.setPassword(request.getPassword());
         user.setRole(Role.STUDENT);
         user.setPhone("");
-        return null;
+        return user; // Trả về đối tượng User đã tạo
     }
 
     public UserResponse toUserResponse(User user) {
-        var userResponse = new UserResponse();
-        userResponse.setFirstname(user.getFirstname());
-        userResponse.setLastname(user.getLastname());
-        userResponse.setEmail(user.getEmail());
-        userResponse.setNotification("Successfully register account!");
-        return userResponse;
+        if (user != null) {
+            var userResponse = new UserResponse();
+            userResponse.setFirstname(user.getFirstname());
+            userResponse.setLastname(user.getLastname());
+            userResponse.setEmail(user.getEmail());
+            userResponse.setNotification("Successfully register account!");
+            return userResponse;
+        }
+        return null; // Xử lý trường hợp user == null (tuỳ theo yêu cầu của ứng dụng)
     }
 }
