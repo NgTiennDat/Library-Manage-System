@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class Token {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 
@@ -28,7 +28,7 @@ public class Token {
     @Column(name = "REVOKED")
     private boolean revoked;
 
-    @Column(name = "CREATED_AT", nullable = false, insertable = false)
+    @Column(name = "CREATED_AT", insertable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "EXPIRED_AT")

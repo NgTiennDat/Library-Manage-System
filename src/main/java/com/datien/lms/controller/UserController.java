@@ -5,11 +5,9 @@ import com.datien.lms.dto.response.UserResponse;
 import com.datien.lms.service.user.UserService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -18,9 +16,19 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> register(
             @RequestBody UserRequest request
     ) throws MessagingException {
-        return ResponseEntity.ok(userService.register(request));
+        userService.register(request);
+        return ResponseEntity.accepted().build();
+    }
+
+
+    @GetMapping("/activate-account")
+    public void activateAccount(
+            @RequestParam String activationCode
+    ) throws MessagingException {
+        userService.activateAccount(activationCode);
     }
 }

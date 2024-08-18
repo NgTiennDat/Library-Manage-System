@@ -3,6 +3,7 @@ package com.datien.lms.service.user;
 import com.datien.lms.dao.Token;
 import com.datien.lms.dao.User;
 import com.datien.lms.repo.TokenRepository;
+import com.datien.lms.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class UserTokenService {
     private final TokenRepository tokenRepository;
+    private final JwtService jwtService;
 
     public void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()

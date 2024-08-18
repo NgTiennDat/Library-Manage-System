@@ -5,11 +5,9 @@ import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.AuthRequest;
 import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.dto.response.AuthResponse;
-import com.datien.lms.dto.response.UserResponse;
 import com.datien.lms.repo.UserRepository;
 import com.datien.lms.service.user.UserTokenService;
 import com.datien.lms.utils.JwtService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,7 +29,7 @@ public class AuthService {
     public AuthResponse doLogin(AuthRequest request) {
         var auth = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(), request.getPassword()
+                        request.getEmail(), request.getPassword()
                 )
         );
 
@@ -39,26 +37,27 @@ public class AuthService {
         var user = (User) auth.getPrincipal();
         claims.put("user", user.getFullName());
 
-        String jwtToken = jwtService.generateToken(claims, user);
-        userTokenService.saveUserToken(user, jwtToken);
+        String jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
+
         userTokenService.revokeAllUserTokens(user);
+        userTokenService.saveUserToken(user, jwtToken);
         return AuthResponse.builder()
                 .token(jwtToken)
                 .notification("Successfully login!")
                 .build();
     }
 
-    public void register(UserRequest request) {
-
-        var user = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .enabled(false)
-                .role(Role.STUDENT)
-                .phone("")
-                .build();
-        userRepository.save(user);
-    }
+//    public void register(UserRequest request) {
+//
+//        var user = User.builder()
+//                .firstname(request.getFirstname())
+//                .lastname(request.getLastname())
+//                .email(request.getEmail())
+//                .password(passwordEncoder.encode(request.getPassword()))
+//                .enabled(false)
+//                .role(Role.STUDENT)
+//                .phone("")
+//                .build();
+//        userRepository.save(user);
+//    }
 }
