@@ -8,6 +8,7 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
@@ -26,6 +27,7 @@ public class EmailService {
     private final JavaMailSender mailSender;
     private final OtpRepository otpRepository;
 
+    @Async
     public void sendEmail(
             String to,
             String username,
@@ -55,6 +57,7 @@ public class EmailService {
         System.out.println("Email sent successfully");
     }
 
+    @Async
     public void sendValidEmail(User user) throws MessagingException {
         String activeCode = generateAndSavedActiveCode(user);
         this.sendEmail(

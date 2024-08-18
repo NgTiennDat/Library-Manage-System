@@ -24,7 +24,7 @@ public class UserTokenService {
         tokenRepository.save(token);
     }
 
-    public void revokeAllUserTokens(User user, String jwtToken) {
+    public void revokeAllUserTokens(User user) {
         var validUserToken = tokenRepository.findAllValidTokenByUser(user.getId());
 
         if(validUserToken.isEmpty()) {

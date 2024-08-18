@@ -11,7 +11,6 @@ import lombok.Setter;
 public class AuthRequest {
     @NotBlank(message =  "Username is mandatory")
     private String username;
-
     @NotBlank(message = "Password is mandatory")
     @Size(min = 8, message = "Password should be 8 characters long minimum.")
     private String password;
