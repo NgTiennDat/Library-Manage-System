@@ -3,8 +3,12 @@ package com.datien.lms.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.Getter;
+import lombok.Setter;
 
-public class UserResetPassword {
+@Getter
+@Setter
+public class UserForgotPasswordRequest {
     @NotEmpty(message = "Password is mandatory.")
     @NotBlank(message = "Password is mandatory.")
     @Email(message = "email not valid")

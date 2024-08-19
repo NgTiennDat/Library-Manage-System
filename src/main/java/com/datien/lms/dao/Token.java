@@ -28,6 +28,10 @@ public class Token {
     @Column(name = "REVOKED")
     private boolean revoked;
 
+    @Column(name = "TOKEN_TYPE")
+    @Enumerated(EnumType.STRING)
+    private TokenType tokenType;
+
     @Column(name = "CREATED_AT", insertable = false)
     private LocalDateTime createdAt;
 
