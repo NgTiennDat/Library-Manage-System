@@ -41,4 +41,11 @@ public class ManagerService {
         }
         adminRepository.save(admin);
     }
+
+    public void deleteAdmin(Long adminId) {
+        adminRepository.deleteById(adminId);
+    }
+
+    public void getAdminDetail(Long adminId) {
+    }
 }

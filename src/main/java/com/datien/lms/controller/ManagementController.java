@@ -1,6 +1,7 @@
 package com.datien.lms.controller;
 
 import com.datien.lms.dto.request.AdminRequest;
+import com.datien.lms.model.Admin;
 import com.datien.lms.service.ManagerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/management")
@@ -18,38 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class ManagementController {
 
     private final ManagerService managerService;
-
-    @Operation(
-            description = "Get endpoint for manager",
-            summary = "This is a summary for management get endpoint",
-            responses = {
-                    @ApiResponse(
-                            description = "Success",
-                            responseCode = "200"
-                    ),
-                    @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
-                            responseCode = "403"
-                    )
-            }
-
-    )
-    @GetMapping
-    public String get() {
-        return "GET:: management controller";
-    }
-//    @PostMapping
-//    public String post() {
-//        return "POST:: management controller";
-//    }
-//    @PutMapping
-//    public String put() {
-//        return "PUT:: management controller";
-//    }
-//    @DeleteMapping
-//    public String delete() {
-//        return "DELETE:: management controller";
-//    }
 
     @Operation(
             description = "Create a new admin",
@@ -67,21 +37,96 @@ public class ManagementController {
     )
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createdAdmin(
-            @RequestBody AdminRequest request
-    ) {
+    public ResponseEntity<?> createAdmin(@RequestBody AdminRequest request) {
         managerService.createAdmin(request);
-        return ResponseEntity.status(201).body("Created successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Created successfully");
     }
 
+    @Operation(
+            description = "Update an existing admin",
+            summary = "Endpoint to update an existing admin",
+            responses = {
+                    @ApiResponse(
+                            description = "Admin updated successfully",
+                            responseCode = "202"
+                    ),
+                    @ApiResponse(
+                            description = "Admin not found",
+                            responseCode = "404"
+                    )
+            }
+    )
     @PutMapping("/update/{admin-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<?> updatedAdmin(
-            @RequestBody AdminRequest request,
-            @PathVariable("admin-id") Long adminId
-    ) {
-        managerService.updateAdminInfo(request, adminId);
-        return ResponseEntity.status(201).body("Updated successfully");
+    public ResponseEntity<?> updateAdmin(@RequestBody AdminRequest request, @PathVariable("admin-id") Long adminId) {
+        try {
+            managerService.updateAdminInfo(request, adminId);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Updated successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
+    @Operation(
+            description = "Delete an existing admin",
+            summary = "Endpoint to delete an existing admin",
+            responses = {
+                    @ApiResponse(
+                            description = "Admin deleted successfully",
+                            responseCode = "202"
+                    ),
+                    @ApiResponse(
+                            description = "Admin not found",
+                            responseCode = "404"
+                    )
+            }
+    )
+    @DeleteMapping("/delete/{admin-id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> deleteAdmin(@PathVariable("admin-id") Long adminId) {
+        try {
+            managerService.deleteAdmin(adminId);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Deleted successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @Operation(
+            description = "Get all admins",
+            summary = "Endpoint to get all admins",
+            responses = {
+                    @ApiResponse(
+                            description = "Admins retrieved successfully",
+                            responseCode = "200"
+                    )
+            }
+    )
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<Admin>> getAllAdmins() {
+        List<Admin> admins = managerService.getAllAdmins();
+        return ResponseEntity.status(HttpStatus.OK).body(admins);
+    }
+
+    @Operation(
+            description = "Get admin details",
+            summary = "Endpoint to get admin details",
+            responses = {
+                    @ApiResponse(
+                            description = "Admin retrieved successfully",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Admin not found",
+                            responseCode = "404"
+                    )
+            }
+    )
+    @GetMapping("/detail/{admin-id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getAdminDetail(@PathVariable("admin-id") Long adminId) {
+        managerService.getAdminDetail(adminId);
+        return ResponseEntity.ok().body("Get admin detail successfully");
+    }
 }
