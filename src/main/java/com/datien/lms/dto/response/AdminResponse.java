@@ -8,5 +8,7 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class AdminResponse {
-
+    private String firstname;
+    private String lastname;
+    private String email;
 }

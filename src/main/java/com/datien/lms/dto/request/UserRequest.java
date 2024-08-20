@@ -4,11 +4,13 @@ import com.datien.lms.dao.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserRequest {
 
     @NotBlank(message = "firstname is mandatory.")
@@ -16,9 +18,6 @@ public class UserRequest {
 
     @NotBlank(message = "lastname is mandatory.")
     private String lastname;
-
-    @NotBlank(message = "username is mandatory.")
-    private String username;
 
     @NotBlank(message = "email is mandatory.")
     @Email(message = "request valid email.")

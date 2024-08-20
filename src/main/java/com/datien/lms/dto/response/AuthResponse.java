@@ -1,5 +1,6 @@
 package com.datien.lms.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,10 @@ import lombok.Setter;
 @Setter
 @Builder
 public class AuthResponse {
-    private String token;
+
+    @JsonProperty("access-token")
+    private String accessToken;
+
+    @JsonProperty("notification")
     private String notification;
 }

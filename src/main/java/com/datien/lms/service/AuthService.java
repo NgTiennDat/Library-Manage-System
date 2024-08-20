@@ -39,7 +39,7 @@ public class AuthService {
         userTokenService.revokeAllUserTokens(user);
         userTokenService.saveUserToken(user, jwtToken);
         return AuthResponse.builder()
-                .token(jwtToken)
+                .accessToken(jwtToken)
                 .notification("Successfully login!")
                 .build();
     }

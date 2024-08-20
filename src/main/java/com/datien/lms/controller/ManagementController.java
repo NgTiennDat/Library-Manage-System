@@ -1,12 +1,13 @@
 package com.datien.lms.controller;
 
 import com.datien.lms.dto.request.AdminRequest;
-import com.datien.lms.model.Admin;
+import com.datien.lms.dto.response.AdminResponse;
 import com.datien.lms.service.ManagerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -104,8 +105,10 @@ public class ManagementController {
     )
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<Admin>> getAllAdmins() {
-        List<Admin> admins = managerService.getAllAdmins();
+    public ResponseEntity<Page<AdminResponse>> getAllAdmins(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<AdminResponse> admins = managerService.getAllAdmins(page, size);
         return ResponseEntity.status(HttpStatus.OK).body(admins);
     }
 
@@ -125,8 +128,10 @@ public class ManagementController {
     )
     @GetMapping("/detail/{admin-id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> getAdminDetail(@PathVariable("admin-id") Long adminId) {
+    public ResponseEntity<AdminResponse> getAdminDetail(
+            @PathVariable("admin-id") Long adminId
+    ) {
         managerService.getAdminDetail(adminId);
-        return ResponseEntity.ok().body("Get admin detail successfully");
+        return ResponseEntity.ok().build();
     }
 }
