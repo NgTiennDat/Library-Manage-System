@@ -4,7 +4,7 @@ import com.datien.lms.dto.request.UserChangePasswordRequest;
 import com.datien.lms.dto.request.UserForgotPasswordRequest;
 import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.dto.request.UserResetPasswordRequest;
-import com.datien.lms.service.user.UserService;
+import com.datien.lms.service.UserService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.datien.lms.service.user;
+package com.datien.lms.service.mapper;
 
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;

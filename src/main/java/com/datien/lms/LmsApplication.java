@@ -2,7 +2,7 @@ package com.datien.lms;
 
 import com.datien.lms.dao.Role;
 import com.datien.lms.dto.request.UserRequest;
-import com.datien.lms.service.user.UserService;
+import com.datien.lms.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
