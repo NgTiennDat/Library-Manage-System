@@ -20,5 +20,8 @@ public class UserResponse {
    @Email(message = "request valid email.")
    private String email;
 
+   private String accessToken;
+   private String refreshToken;
+
    private String notification;
 }

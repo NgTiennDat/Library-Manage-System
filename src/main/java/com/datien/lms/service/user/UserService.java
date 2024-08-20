@@ -6,6 +6,7 @@ import com.datien.lms.dto.request.UserChangePasswordRequest;
 import com.datien.lms.dto.request.UserForgotPasswordRequest;
 import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.dto.request.UserResetPasswordRequest;
+import com.datien.lms.dto.response.UserResponse;
 import com.datien.lms.repo.OtpRepository;
 import com.datien.lms.repo.UserRepository;
 import com.datien.lms.service.EmailService;
@@ -41,9 +42,8 @@ public class UserService {
                 .phone("")
                 .build();
 
-        var savedUser = userRepository.save(user);
+        userRepository.save(user);
         emailService.sendValidEmail(user);
-        userMapper.toUserResponse(savedUser);
     }
 
     public void activateAccount(String activationCode) throws MessagingException {
@@ -110,6 +110,13 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(userResetPassword.getNewPassword()));
         userRepository.save(user);
         otpRepository.save(activeCode);
+    }
+
+    private UserResponse buildUserResponse(String jwtToken, String refreshToken) {
+        return UserResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 }
 

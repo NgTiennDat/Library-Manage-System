@@ -22,7 +22,7 @@ public class UserMapper {
     public UserResponse toUserResponse(User user) {
         if (user != null) {
             var userResponse = new UserResponse();
-            userResponse.setFirstname(user.getFirstname());
+
             userResponse.setLastname(user.getLastname());
             userResponse.setEmail(user.getEmail());
             userResponse.setNotification("Successfully register account!");
