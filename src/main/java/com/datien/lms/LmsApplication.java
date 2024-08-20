@@ -1,5 +1,6 @@
 package com.datien.lms;
 
+import com.datien.lms.dto.request.AdminRequest;
 import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.service.UserService;
 import org.springframework.boot.CommandLineRunner;
@@ -32,6 +33,7 @@ public class LmsApplication {
                     .email("admin@mail.com")
                     .password("password1")
                     .role(ADMIN)
+                    .enabled(true)
                     .build();
             service.register(admin);
             var manager = UserRequest.builder()
@@ -40,9 +42,9 @@ public class LmsApplication {
                     .email("manager@mail.com")
                     .password("password2")
                     .role(MANAGER)
+                    .enabled(true)
                     .build();
            service.register(manager);
         };
     }
-
 }

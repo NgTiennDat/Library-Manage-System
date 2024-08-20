@@ -9,7 +9,6 @@ import com.datien.lms.dto.request.UserResetPasswordRequest;
 import com.datien.lms.dto.response.UserResponse;
 import com.datien.lms.repo.OtpRepository;
 import com.datien.lms.repo.UserRepository;
-import com.datien.lms.service.mapper.UserMapper;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -23,7 +22,6 @@ import java.time.LocalDateTime;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final OtpRepository otpRepository;
@@ -35,7 +33,7 @@ public class UserService {
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .enabled(false)
+                .enabled(request.isEnabled())
                 .role(Role.STUDENT)
                 .phone("")
                 .build();
