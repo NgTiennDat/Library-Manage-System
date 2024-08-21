@@ -1,5 +1,6 @@
 package com.datien.lms.common;
 
+import com.datien.lms.handlerException.ResponseCode;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;

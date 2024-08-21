@@ -1,10 +1,6 @@
-package com.datien.lms.common;
-
+package com.datien.lms.handlerException;
 
 import lombok.Getter;
-
-import static org.springframework.http.HttpStatus.*;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @Getter
 public enum ResponseCode {

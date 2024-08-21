@@ -43,7 +43,7 @@ public class ManagementController {
             @RequestBody AdminRequest request,
             Authentication connectedUser
     ) {
-        managerService.createAdmin(request);
+        managerService.createAdmin(request, connectedUser);
         return ResponseEntity.status(HttpStatus.CREATED).body("Created successfully");
     }
 

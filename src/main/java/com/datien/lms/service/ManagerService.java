@@ -1,6 +1,7 @@
 package com.datien.lms.service;
 
 import com.datien.lms.dao.Admin;
+import com.datien.lms.dao.Manager;
 import com.datien.lms.dao.Role;
 import com.datien.lms.dto.request.AdminRequest;
 import com.datien.lms.dto.response.AdminResponse;
@@ -9,10 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +22,11 @@ public class ManagerService {
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public void createAdmin(AdminRequest request) {
+    public void createAdmin(AdminRequest request, Authentication connectedUser) {
+        Manager manager = (Manager) connectedUser.getPrincipal();
+        if(manager.getRole() != Role.MANAGER) {
+            throw new RuntimeException("You dont have permission to create admin!");
+        }
         var admin = new Admin();
         admin.setFirstname(request.getFirstname());
         admin.setLastname(request.getLastname());
