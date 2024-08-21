@@ -65,7 +65,7 @@ public class ManagementController {
             @RequestBody AdminRequest request,
             @PathVariable("admin-id") Long adminId,
             Authentication connectedUser
-    ) {
+    ) throws IllegalAccessException {
         managerService.updateAdminInfo(request, adminId, connectedUser);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Updated successfully");
     }
@@ -86,13 +86,11 @@ public class ManagementController {
     )
     @DeleteMapping("/delete/{admin-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<?> deleteAdmin(@PathVariable("admin-id") Long adminId) {
-        try {
-            managerService.deleteAdmin(adminId);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Deleted successfully");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<?> deleteAdmin(
+            @PathVariable("admin-id") Long adminId
+    ) {
+        managerService.deleteAdmin(adminId);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Deleted successfully");
     }
 
     @Operation(
@@ -109,8 +107,10 @@ public class ManagementController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Page<AdminResponse>> getAllAdmins(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<AdminResponse> admins = managerService.getAllAdmins(page, size);
+            @RequestParam(defaultValue = "10") int size,
+            Authentication connectedUser
+    ) {
+        Page<AdminResponse> admins = managerService.getAllAdmins(page, size, connectedUser);
         return ResponseEntity.status(HttpStatus.OK).body(admins);
     }
 
@@ -131,9 +131,10 @@ public class ManagementController {
     @GetMapping("/detail/{admin-id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<AdminResponse> getAdminDetail(
-            @PathVariable("admin-id") Long adminId
+            @PathVariable("admin-id") Long adminId,
+            Authentication connectedUser
     ) {
-        managerService.getAdminDetail(adminId);
+        managerService.getAdminDetail(adminId, connectedUser);
         return ResponseEntity.ok().build();
     }
 }

@@ -1,9 +1,8 @@
 package com.datien.lms.controller;
 
-import com.datien.lms.dto.request.UserRequest;
-import com.datien.lms.service.AuthService;
 import com.datien.lms.dto.request.AuthRequest;
 import com.datien.lms.dto.response.AuthResponse;
+import com.datien.lms.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

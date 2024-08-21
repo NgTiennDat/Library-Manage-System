@@ -78,7 +78,9 @@ public class GlobalExceptionHandler {
                 .status(INTERNAL_SERVER_ERROR)
                 .body(
                         ExceptionResponse.builder()
-                                .businessExceptionDescription("Internal Server Error, please contact the Administrator.")
+                                .businessErrorCode(SYSTEM.getCode())
+                                .businessExceptionDescription(SYSTEM.getMessage())
+                                .error(ex.getMessage())
                                 .build()
                 );
     }

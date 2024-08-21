@@ -34,7 +34,7 @@ public class UserService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .enabled(request.isEnabled())
-                .role(Role.STUDENT)
+                .role(request.getRole())
                 .phone("")
                 .build();
 

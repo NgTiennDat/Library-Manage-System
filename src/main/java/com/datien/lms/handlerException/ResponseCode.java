@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ResponseCode {
 
-    SYSTEM("ERR_5001", "System message. Please, try later!"),
+    SYSTEM("ERR_501", "System message. Please, try later!"),
     NO_CODE("ERR_000", "No code"),
     INCORRECT_CURRENT_PASSWORD("ERR_300", "Incorrect current password"),
     NEW_PASSWORD_DOES_NOT_MATCH("ERR_301", "New password does not match"),

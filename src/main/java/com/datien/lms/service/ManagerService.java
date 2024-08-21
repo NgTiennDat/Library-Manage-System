@@ -3,6 +3,7 @@ package com.datien.lms.service;
 import com.datien.lms.dao.Admin;
 import com.datien.lms.dao.Manager;
 import com.datien.lms.dao.Role;
+import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.AdminRequest;
 import com.datien.lms.dto.response.AdminResponse;
 import com.datien.lms.exception.OperationNotPermittedException;
@@ -24,9 +25,9 @@ public class ManagerService {
     private final PasswordEncoder passwordEncoder;
 
     public void createAdmin(AdminRequest request, Authentication connectedUser) {
-        Manager manager = (Manager) connectedUser.getPrincipal();
-        if(manager.getRole() != Role.MANAGER) {
-            throw new RuntimeException("You dont have permission to create admin!");
+        User user = (User) connectedUser.getPrincipal();
+        if(user.getRole() != Role.MANAGER) {
+            throw new OperationNotPermittedException("You dont have permission to update admin!");
         }
         var admin = new Admin();
         admin.setFirstname(request.getFirstname());
@@ -38,12 +39,12 @@ public class ManagerService {
         adminRepository.save(admin);
     }
 
-    public void updateAdminInfo(AdminRequest request, Long adminId, Authentication connectedUser) {
+    public void updateAdminInfo(AdminRequest request, Long adminId, Authentication connectedUser) throws IllegalAccessException {
         var admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new RuntimeException("Admin not found."));
 
-        Manager manager = (Manager) connectedUser.getPrincipal();
-        if(manager.getRole() != Role.MANAGER) {
+        User user = (User) connectedUser.getPrincipal();
+        if(user.getRole() != Role.MANAGER) {
             throw new OperationNotPermittedException("You dont have permission to update admin!");
         }
         if(admin.isEnabled()) {
@@ -53,7 +54,7 @@ public class ManagerService {
             admin.setPassword(passwordEncoder.encode(request.getPassword()));
             admin.setRole(Role.ADMIN);
         } else {
-            throw new RuntimeException("Admin is not active.");
+            throw new IllegalAccessException("Admin is not active.");
         }
         adminRepository.save(admin);
     }
@@ -62,16 +63,25 @@ public class ManagerService {
         adminRepository.deleteById(adminId);
     }
 
-    public AdminResponse getAdminDetail(Long adminId) {
+    public AdminResponse getAdminDetail(Long adminId, Authentication connectedUser) {
         var admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new RuntimeException("Admin not found."));
+
+        User user = (User) connectedUser.getPrincipal();
+        if(user.getRole() != Role.MANAGER) {
+            throw new OperationNotPermittedException("You dont have permission to update admin!");
+        }
 
         var response = this.toAdminResponse(admin);
         adminRepository.save(admin);
         return response;
     }
 
-    public Page<AdminResponse> getAllAdmins(int page, int size) {
+    public Page<AdminResponse> getAllAdmins(int page, int size, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+        if(user.getRole() != Role.MANAGER) {
+            throw new OperationNotPermittedException("You dont have permission to update admin!");
+        }
         Pageable pageable = PageRequest.of(page, size);
         Page<Admin> adminPage = adminRepository.findAll(pageable);
         return adminPage.map(this::toAdminResponse);

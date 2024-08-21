@@ -45,7 +45,7 @@ public class LmsApplication {
                     .role(MANAGER)
                     .enabled(true)
                     .build();
-           service.register(manager);
+            service.register(manager);
         };
     }
 }
