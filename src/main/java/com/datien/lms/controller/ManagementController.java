@@ -13,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/management")
 @Tag(name = "Management")
@@ -63,13 +61,13 @@ public class ManagementController {
     )
     @PutMapping("/update/{admin-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<?> updateAdmin(@RequestBody AdminRequest request, @PathVariable("admin-id") Long adminId) {
-        try {
-            managerService.updateAdminInfo(request, adminId);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Updated successfully");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<?> updateAdmin(
+            @RequestBody AdminRequest request,
+            @PathVariable("admin-id") Long adminId,
+            Authentication connectedUser
+    ) {
+        managerService.updateAdminInfo(request, adminId, connectedUser);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Updated successfully");
     }
 
     @Operation(

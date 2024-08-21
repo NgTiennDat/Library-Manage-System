@@ -5,6 +5,7 @@ import com.datien.lms.dao.Manager;
 import com.datien.lms.dao.Role;
 import com.datien.lms.dto.request.AdminRequest;
 import com.datien.lms.dto.response.AdminResponse;
+import com.datien.lms.exception.OperationNotPermittedException;
 import com.datien.lms.repo.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,9 +38,14 @@ public class ManagerService {
         adminRepository.save(admin);
     }
 
-    public void updateAdminInfo(AdminRequest request, Long adminId) {
+    public void updateAdminInfo(AdminRequest request, Long adminId, Authentication connectedUser) {
         var admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new RuntimeException("Admin not found."));
+
+        Manager manager = (Manager) connectedUser.getPrincipal();
+        if(manager.getRole() != Role.MANAGER) {
+            throw new OperationNotPermittedException("You dont have permission to update admin!");
+        }
         if(admin.isEnabled()) {
             admin.setFirstname(request.getFirstname());
             admin.setLastname(request.getLastname());

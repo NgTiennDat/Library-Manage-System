@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lms
+    username: postgres
+    password: tiendat1409
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ntdat14092003@gmail.com
+    password: eizg ktmr jisc ibxe
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+application:
+  security:
+    jwt:
+      secret-key: zAIwQmfQdiOxNCCGy3iR2zv6fjCIZbqsbTWPGAHYmVCltfr2tlldOF2+1UCOP0H1
+      expiration: 8640000
+      refresh-token:
+        expiration: 604800000
