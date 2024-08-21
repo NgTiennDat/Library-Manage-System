@@ -8,6 +8,7 @@ import com.datien.lms.dto.request.AdminRequest;
 import com.datien.lms.dto.response.AdminResponse;
 import com.datien.lms.exception.OperationNotPermittedException;
 import com.datien.lms.repo.AdminRepository;
+import com.datien.lms.service.mapper.AdminMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +24,7 @@ public class ManagerService {
 
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AdminMapper adminMapper;
 
     public void createAdmin(AdminRequest request, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
@@ -72,7 +74,7 @@ public class ManagerService {
             throw new OperationNotPermittedException("You dont have permission to update admin!");
         }
 
-        var response = this.toAdminResponse(admin);
+        var response = adminMapper.toAdminResponse(admin);
         adminRepository.save(admin);
         return response;
     }
@@ -84,15 +86,9 @@ public class ManagerService {
         }
         Pageable pageable = PageRequest.of(page, size);
         Page<Admin> adminPage = adminRepository.findAll(pageable);
-        return adminPage.map(this::toAdminResponse);
+        return adminPage.map(adminMapper::toAdminResponse);
     }
 
-    public AdminResponse toAdminResponse(Admin admin) {
-        var adminResponse = new AdminResponse();
-        adminResponse.setFirstname(admin.getFirstname());
-        adminResponse.setLastname(admin.getLastname());
-        adminResponse.setEmail(admin.getEmail());
-        return adminResponse;
-    }
+
 
 }

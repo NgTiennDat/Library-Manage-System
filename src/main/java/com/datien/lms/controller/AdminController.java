@@ -12,6 +12,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
+
 @RestController
 @PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/v1/admin")
@@ -29,8 +31,8 @@ public class AdminController {
                     @ApiResponse(description = "Admin not found", responseCode = "404")
             }
     )
-    public ResponseEntity<?> getAdminById(@PathVariable Long adminId) {
-        var admin = adminService.getAdminById(adminId);
+    public ResponseEntity<?> getStudentId(@PathVariable Long userId) {
+        var admin = adminService.getStudentById(userId);
         return ResponseEntity.ok(admin);
     }
 
@@ -47,8 +49,8 @@ public class AdminController {
     )
     public ResponseEntity<?> create(
             @RequestBody AdminRequest request, Authentication connectedUser
-    ) {
-        adminService.createAdmin(request, connectedUser);
+    ) throws AccessDeniedException {
+        adminService.createUser(request, connectedUser);
         return ResponseEntity.status(HttpStatus.CREATED).body("Created successfully");
     }
 
@@ -67,7 +69,7 @@ public class AdminController {
             @RequestBody AdminRequest request,
             @PathVariable Long adminId,
             Authentication connectedUser
-    ) {
+    ) throws AccessDeniedException, IllegalAccessException {
         adminService.updateAdminInfo(request, adminId, connectedUser);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Updated successfully");
     }
