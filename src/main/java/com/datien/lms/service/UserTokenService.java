@@ -3,7 +3,7 @@ package com.datien.lms.service;
 import com.datien.lms.dao.Token;
 import com.datien.lms.dao.TokenType;
 import com.datien.lms.dao.User;
-import com.datien.lms.repo.TokenRepository;
+import com.datien.lms.repository.TokenRepository;
 import com.datien.lms.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

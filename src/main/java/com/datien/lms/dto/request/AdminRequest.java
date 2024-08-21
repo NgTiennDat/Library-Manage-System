@@ -27,6 +27,9 @@ public class AdminRequest {
     @Size(min = 8, message = "password has at least 8 characters.")
     private String password;
 
+    @NotBlank(message = "sex is mandatory.")
+    private String sex;
+
     private boolean enabled;
 
     private Role role;

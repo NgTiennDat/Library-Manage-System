@@ -1,4 +1,4 @@
-package com.datien.lms.repo;
+package com.datien.lms.repository;
 
 import com.datien.lms.dao.User;
 import org.springframework.data.jpa.repository.JpaRepository;

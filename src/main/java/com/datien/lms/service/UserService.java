@@ -1,14 +1,13 @@
 package com.datien.lms.service;
 
-import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.UserChangePasswordRequest;
 import com.datien.lms.dto.request.UserForgotPasswordRequest;
 import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.dto.request.UserResetPasswordRequest;
 import com.datien.lms.dto.response.UserResponse;
-import com.datien.lms.repo.OtpRepository;
-import com.datien.lms.repo.UserRepository;
+import com.datien.lms.repository.OtpRepository;
+import com.datien.lms.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

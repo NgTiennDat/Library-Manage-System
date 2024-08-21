@@ -2,7 +2,7 @@ package com.datien.lms.service;
 
 import com.datien.lms.dao.Otp;
 import com.datien.lms.dao.User;
-import com.datien.lms.repo.OtpRepository;
+import com.datien.lms.repository.OtpRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

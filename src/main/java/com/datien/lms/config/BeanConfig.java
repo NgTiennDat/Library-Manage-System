@@ -1,6 +1,6 @@
 package com.datien.lms.config;
 
-import com.datien.lms.repo.UserRepository;
+import com.datien.lms.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

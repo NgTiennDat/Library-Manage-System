@@ -1,13 +1,12 @@
 package com.datien.lms.service;
 
 import com.datien.lms.dao.Admin;
-import com.datien.lms.dao.Manager;
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.AdminRequest;
 import com.datien.lms.dto.response.AdminResponse;
 import com.datien.lms.exception.OperationNotPermittedException;
-import com.datien.lms.repo.AdminRepository;
+import com.datien.lms.repository.AdminRepository;
 import com.datien.lms.service.mapper.AdminMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

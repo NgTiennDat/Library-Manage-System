@@ -5,7 +5,7 @@ import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.BookRequest;
 import com.datien.lms.dto.response.BookResponse;
-import com.datien.lms.repo.BookRepository;
+import com.datien.lms.repository.BookRepository;
 import com.datien.lms.service.mapper.BookMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

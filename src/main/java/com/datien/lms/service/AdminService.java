@@ -5,8 +5,7 @@ import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.AdminRequest;
 import com.datien.lms.dto.response.AdminResponse;
-import com.datien.lms.exception.OperationNotPermittedException;
-import com.datien.lms.repo.AdminRepository;
+import com.datien.lms.repository.AdminRepository;
 import com.datien.lms.service.mapper.AdminMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -79,4 +78,6 @@ public class AdminService {
     }
 
 
+    public void getDetailStudentInfo() {
+    }
 }

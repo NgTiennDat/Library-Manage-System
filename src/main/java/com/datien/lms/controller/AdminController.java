@@ -1,11 +1,13 @@
 package com.datien.lms.controller;
 
 import com.datien.lms.dto.request.AdminRequest;
+import com.datien.lms.dto.response.StudentResponse;
 import com.datien.lms.service.AdminService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -52,6 +54,21 @@ public class AdminController {
     ) throws AccessDeniedException {
         adminService.createUser(request, connectedUser);
         return ResponseEntity.status(HttpStatus.CREATED).body("Created successfully");
+    }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasAuthority('admin::read')")
+    @Operation(
+            description = "Get an admin by ID",
+            summary = "Endpoint to get an admin by ID",
+            responses = {
+                    @ApiResponse(description = "Admin found", responseCode = "200"),
+                    @ApiResponse(description = "Admin not found", responseCode = "404")
+            }
+    )
+    public ResponseEntity<Page<StudentResponse>> getAll() {
+        adminService.getDetailStudentInfo();
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{adminId}")

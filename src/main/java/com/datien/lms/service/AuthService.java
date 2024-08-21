@@ -3,7 +3,7 @@ package com.datien.lms.service;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.AuthRequest;
 import com.datien.lms.dto.response.AuthResponse;
-import com.datien.lms.repo.UserRepository;
+import com.datien.lms.repository.UserRepository;
 import com.datien.lms.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
