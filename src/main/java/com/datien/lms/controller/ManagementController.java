@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +39,10 @@ public class ManagementController {
     )
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createAdmin(@RequestBody AdminRequest request) {
+    public ResponseEntity<?> createAdmin(
+            @RequestBody AdminRequest request,
+            Authentication connectedUser
+    ) {
         managerService.createAdmin(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("Created successfully");
     }
