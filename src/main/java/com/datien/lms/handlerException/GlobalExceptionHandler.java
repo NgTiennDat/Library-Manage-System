@@ -13,8 +13,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.datien.lms.handlerException.ResponseCode.*;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -61,14 +64,41 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MessagingException.class)
     public ResponseEntity<ExceptionResponse> handleException(MessagingException ex) {
         return ResponseEntity
-                .status(UNAUTHORIZED)
+                .status(INTERNAL_SERVER_ERROR)
                 .body(
                         ExceptionResponse.builder()
-                                .businessErrorCode(INCORRECT_CURRENT_PASSWORD.getCode())
-                                .businessExceptionDescription(INCORRECT_CURRENT_PASSWORD.getMessage())
                                 .error(ex.getMessage())
                                 .build()
                 );
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse> handleException(Exception ex) {
+        return ResponseEntity
+                .status(INTERNAL_SERVER_ERROR)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessExceptionDescription("Internal Server Error, please contact the Administrator.")
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionResponse> handleException(MethodArgumentNotValidException ex) {
+        Set<String> errors = new HashSet<>();
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            var messageError = error.getDefaultMessage();
+            errors.add(messageError);
+        });
+
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .validationErrors(errors)
+                                .build()
+                );
+
     }
 
     @ExceptionHandler(OperationNotPermittedException.class)
