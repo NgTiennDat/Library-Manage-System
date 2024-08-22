@@ -69,8 +69,12 @@ public class AdminController {
                     @ApiResponse(description = "Admin not found", responseCode = "404")
             }
     )
-    public ResponseEntity<Page<StudentResponse>> getAll() {
-        adminService.getAllStudent();
+    public ResponseEntity<Page<StudentResponse>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Authentication connectedUser
+    ) throws AccessDeniedException {
+        adminService.getAllStudent(page, size, connectedUser);
         return ResponseEntity.ok().build();
     }
 

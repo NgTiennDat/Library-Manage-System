@@ -5,6 +5,8 @@ import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.BookRequest;
 import com.datien.lms.dto.response.BookResponse;
+import com.datien.lms.dto.response.BorrowBookResponse;
+import com.datien.lms.exception.OperationNotPermittedException;
 import com.datien.lms.repository.BookRepository;
 import com.datien.lms.service.mapper.BookMapper;
 import jakarta.persistence.EntityNotFoundException;
@@ -62,4 +64,37 @@ public class BookService {
     public void deleteBook(Long bookId) {
         bookRepository.deleteById(bookId);
     }
+
+    public Page<BorrowBookResponse> getAllBorrowedBooks(int page, int size, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+        if(user.getRole() != Role.ADMIN) {
+            throw new AccessDeniedException("You don't have permission to see borrowed books of the library");
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("borrowDate").descending());
+        Page<Book> borrowedBooks = bookRepository.findAllByIsAvailableFalse(pageable);
+        List<BorrowBookResponse> borrowBookResponses = borrowedBooks
+                .stream()
+                .map(bookMapper::toBorrowBookResponse)
+                .collect(Collectors.toList());
+        return new PageImpl<>(borrowBookResponses, pageable, borrowedBooks.getTotalElements());
+    }
+
+    public Integer borrowBook(Long bookId, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("No book found with the Id " + bookId));
+
+        if(!book.isAvailable()) {
+            throw new OperationNotPermittedException("The requested book cannot be borrowed.");
+        }
+
+        book.setAvailable(false);
+        bookRepository.save(book);
+
+        return book.getId().intValue();
+    }
+
+
 }

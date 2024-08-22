@@ -8,4 +8,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity(name = "tbl_student")
 public class Student extends User {
+    private boolean isBorrowing;
+
 }

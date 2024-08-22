@@ -75,6 +75,7 @@ public class EmailService {
                 .createdAt(LocalDateTime.now())
                 .expiredAt(LocalDateTime.now().plusMinutes(15))
                 .user(user)
+                .username(user.getFullName())
                 .build();
         otpRepository.save(otp);
         return activateCode;

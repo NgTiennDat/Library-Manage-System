@@ -2,6 +2,7 @@ package com.datien.lms.service.mapper;
 
 import com.datien.lms.dao.Book;
 import com.datien.lms.dto.response.BookResponse;
+import com.datien.lms.dto.response.BorrowBookResponse;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,5 +17,9 @@ public class BookMapper {
         bookResponse.setAvailable(book.isAvailable());
         bookResponse.setGenres(book.getGenre());
         return bookResponse;
+    }
+
+    public BorrowBookResponse toBorrowBookResponse(Book book) {
+        return null;
     }
 }

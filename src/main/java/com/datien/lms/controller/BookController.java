@@ -2,6 +2,7 @@ package com.datien.lms.controller;
 
 import com.datien.lms.dto.request.BookRequest;
 import com.datien.lms.dto.response.BookResponse;
+import com.datien.lms.dto.response.BorrowBookResponse;
 import com.datien.lms.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,17 @@ public class BookController {
             @PathVariable("book-id") Long bookId
     ) {
         bookService.getDetailBook(bookId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/borrowed")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<Page<BorrowBookResponse>> findAllBorrowedBook(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            Authentication connectedUser
+    ) {
+        bookService.getAllBorrowedBooks(page, size, connectedUser);
         return ResponseEntity.ok().build();
     }
 

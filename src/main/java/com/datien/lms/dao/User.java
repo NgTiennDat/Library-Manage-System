@@ -44,7 +44,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private SEX sex;
-//
+
 //    @OneToMany
 //    List<Token> tokens;
 

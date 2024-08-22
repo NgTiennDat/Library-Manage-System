@@ -21,8 +21,10 @@ public class Otp {
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;
     private LocalDateTime validatedAt;
+    private String username;
 
     @OneToOne
     @JoinColumn(name = "userId")
     private User user;
+
 }

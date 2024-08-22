@@ -7,12 +7,15 @@ import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.AdminRequest;
 import com.datien.lms.dto.response.AdminResponse;
 import com.datien.lms.dto.response.StudentResponse;
+import com.datien.lms.exception.OperationNotPermittedException;
 import com.datien.lms.repository.AdminRepository;
 import com.datien.lms.repository.StudentRepository;
 import com.datien.lms.service.mapper.AdminMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -99,8 +102,13 @@ public class AdminService {
         return studentResponse;
     }
 
-    public Page<StudentResponse> getAllStudent() {
-
-        return null;
+    public Page<StudentResponse> getAllStudent(int page, int size, Authentication connectedUser) throws AccessDeniedException {
+        User user = (User) connectedUser.getPrincipal();
+        if(user.getRole() != Role.ADMIN) {
+            throw new AccessDeniedException("Access denied because your role is not ADMIN");
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Student> students = studentRepository.findAll(pageable);
+        return students.map(this::toStudentResponse);
     }
 }
