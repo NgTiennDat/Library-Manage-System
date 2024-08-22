@@ -19,22 +19,30 @@ public class BookController {
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<Page<BookResponse>> getBook(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+    public ResponseEntity<?> getBook(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size
     ) {
-        bookService.getAllBook(page, size);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(bookService.getAllBook(page, size));
     }
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<BookResponse> createBook(
+    public ResponseEntity<?> createBook(
             @RequestBody BookRequest bookRequest,
             Authentication connectedUser
     ) {
-        bookService.createBook(bookRequest, connectedUser);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(bookService.createBook(bookRequest, connectedUser));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllBookByISBN(
+            @RequestParam(name = "ISBN") String ISBN,
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(bookService.findAllBookByISBN(ISBN, page, size, connectedUser));
     }
 
     @GetMapping("/{book-id}")

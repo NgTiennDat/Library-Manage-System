@@ -9,7 +9,9 @@ public class BookRequest {
     private String title;
     private String author;
     private String publisher;
-    private String genre;
+    private String ISBN;
     private String synopsis;
+    private int pageCount;
+    private String genre;
     private boolean available;
 }

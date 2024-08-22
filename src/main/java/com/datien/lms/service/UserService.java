@@ -92,6 +92,7 @@ public class UserService {
     public Map<Object, Object> changePassword(UserChangePasswordRequest request, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
+        String notification = "";
 
         try {
             var user = (User) connectedUser.getPrincipal();
@@ -107,6 +108,7 @@ public class UserService {
 
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
             userRepository.save(user);
+            notification = "Successfully changed password";
 
         } catch (Exception ex) {
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
@@ -114,6 +116,7 @@ public class UserService {
         }
 
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         return resultExecuted;
     }
 
@@ -121,6 +124,7 @@ public class UserService {
     public Map<Object, Object> handleForgotPassword(UserForgotPasswordRequest request) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
+        String notification = "";
 
         try {
             User user = userRepository.findByEmail(request.getEmail())
@@ -136,13 +140,14 @@ public class UserService {
             user.setEnabled(false);
             userRepository.save(user);
             emailService.sendValidEmail(user);
-
+            notification = "Forgot password verified.";
         } catch (Exception ex) {
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         }
 
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         return resultExecuted;
     }
 
@@ -150,6 +155,7 @@ public class UserService {
     public Map<Object, Object> handleResetPassword(UserResetPasswordRequest userResetPassword) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
+        String notification = "";
 
         try {
             User user = userRepository.findByEmail(userResetPassword.getEmail())
@@ -166,6 +172,7 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(userResetPassword.getNewPassword()));
             userRepository.save(user);
             otpRepository.save(activeCode);
+            notification = "Successfully Reset password.";
 
         } catch (Exception ex) {
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
@@ -173,6 +180,7 @@ public class UserService {
         }
 
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         return resultExecuted;
     }
 
