@@ -33,8 +33,11 @@ public class AdminController {
                     @ApiResponse(description = "Admin not found", responseCode = "404")
             }
     )
-    public ResponseEntity<?> getStudentId(@PathVariable Long userId) {
-        var admin = adminService.getStudentById(userId);
+    public ResponseEntity<?> getStudentId(
+            @PathVariable Long userId,
+            Authentication connectedUser
+    ) throws AccessDeniedException {
+        var admin = adminService.getStudentById(userId, connectedUser);
         return ResponseEntity.ok(admin);
     }
 
@@ -67,7 +70,7 @@ public class AdminController {
             }
     )
     public ResponseEntity<Page<StudentResponse>> getAll() {
-        adminService.getDetailStudentInfo();
+        adminService.getAllStudent();
         return ResponseEntity.ok().build();
     }
 
@@ -91,7 +94,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Updated successfully");
     }
 
-    @DeleteMapping("/{adminId}")
+    @DeleteMapping("/{student-id}")
     @PreAuthorize("hasAuthority('admin:delete')")
     @Hidden
     @Operation(
@@ -102,8 +105,11 @@ public class AdminController {
                     @ApiResponse(description = "Admin not found", responseCode = "404")
             }
     )
-    public ResponseEntity<?> delete(@PathVariable Long adminId) {
-        adminService.deleteAdmin(adminId);
+    public ResponseEntity<?> delete(
+            @PathVariable("student-id") Long adminId,
+            Authentication connectedUser
+    ) throws AccessDeniedException {
+        adminService.deleteStudent(adminId, connectedUser);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

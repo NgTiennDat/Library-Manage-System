@@ -11,7 +11,7 @@ public class AdminMapper {
         var adminResponse = new AdminResponse();
         adminResponse.setFirstname(admin.getFirstname());
         adminResponse.setLastname(admin.getLastname());
-        adminResponse.setEmail(admin.getEmail());
+        adminResponse.setSex(String.valueOf(admin.getSex()));
         return adminResponse;
     }
 }

@@ -2,13 +2,17 @@ package com.datien.lms.service;
 
 import com.datien.lms.dao.Admin;
 import com.datien.lms.dao.Role;
+import com.datien.lms.dao.Student;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.AdminRequest;
 import com.datien.lms.dto.response.AdminResponse;
+import com.datien.lms.dto.response.StudentResponse;
 import com.datien.lms.repository.AdminRepository;
+import com.datien.lms.repository.StudentRepository;
 import com.datien.lms.service.mapper.AdminMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,13 +26,18 @@ public class AdminService {
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
     private final AdminMapper adminMapper;
+    private final StudentRepository studentRepository;
 
-    public AdminResponse getStudentById(Long adminId) {
-        var admin = adminRepository.findById(adminId)
+    public StudentResponse getStudentById(Long studentId, Authentication connectedUser) throws AccessDeniedException {
+        User user = (User) connectedUser.getPrincipal();
+        if(user.getRole() != Role.ADMIN) {
+            throw new AccessDeniedException("Access denied because your role is not ADMIN");
+        }
+
+        var student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new EntityNotFoundException("Admin not found."));
 
-
-        return null;
+        return this.toStudentResponse(student);
     }
 
     public void createUser(AdminRequest request, Authentication connectedUser) throws AccessDeniedException {
@@ -74,10 +83,24 @@ public class AdminService {
         return adminMapper.toAdminResponse(admin);
     }
 
-    public void deleteAdmin(Long adminId) {
+    public void deleteStudent(Long studentId, Authentication connectedUser) throws AccessDeniedException {
+        User user = (User) connectedUser.getPrincipal();
+        if(user.getRole() != Role.ADMIN) {
+            throw new AccessDeniedException("Access denied because your role is not ADMIN");
+        }
+        studentRepository.deleteById(studentId);
     }
 
+    private StudentResponse toStudentResponse(Student student) {
+        var studentResponse = new StudentResponse();
+        studentResponse.setFirstname(student.getFirstname());
+        studentResponse.setLastname(student.getLastname());
+        studentResponse.setSex(String.valueOf(student.getSex()));
+        return studentResponse;
+    }
 
-    public void getDetailStudentInfo() {
+    public Page<StudentResponse> getAllStudent() {
+
+        return null;
     }
 }

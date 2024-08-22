@@ -10,5 +10,5 @@ import lombok.Setter;
 public class AdminResponse {
     private String firstname;
     private String lastname;
-    private String email;
+    private String sex;
 }
