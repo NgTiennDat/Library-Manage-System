@@ -39,9 +39,14 @@ public class User implements UserDetails {
     @Column(name = "ENABLE")
     private boolean enabled;
 
+    @Column(name = "LOGIN_COUNT")
+    private int loginCount;
+
+    @Column(name = "USER_ROLE")
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "USER_SEX")
     @Enumerated(EnumType.STRING)
     private SEX sex;
 
@@ -50,7 +55,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return role.getAuthorities();
     }
 
     @Override

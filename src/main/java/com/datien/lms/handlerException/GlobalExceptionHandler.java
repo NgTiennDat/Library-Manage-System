@@ -1,6 +1,7 @@
 package com.datien.lms.handlerException;
 
 import com.datien.lms.exception.OperationNotPermittedException;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
@@ -18,6 +19,7 @@ import java.util.Set;
 
 import static com.datien.lms.handlerException.ResponseCode.*;
 import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -80,6 +82,19 @@ public class GlobalExceptionHandler {
                         ExceptionResponse.builder()
                                 .businessErrorCode(SYSTEM.getCode())
                                 .businessExceptionDescription(SYSTEM.getMessage())
+                                .error(ex.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ExceptionResponse> handleException(ExpiredJwtException ex) {
+        return ResponseEntity
+                .status(UNAUTHORIZED)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(TOKEN_EXPIRED.getCode())
+                                .businessExceptionDescription(TOKEN_EXPIRED.getMessage())
                                 .error(ex.getMessage())
                                 .build()
                 );

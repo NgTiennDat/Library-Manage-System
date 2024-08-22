@@ -13,4 +13,11 @@ public class AppConstant {
 
     public static final String IMAGE_PREFIX = "/views/user/assets/img/avt/avt-";
     public static final String IMAGE_SUFFIX = ".jpg";
+
+    public interface RESPONSE_KEY {
+        String RESULT = "RESULT_KEY";
+        String DATA = "DATA_KEY";
+        String NOTIFICATION = "NOTIFICATION_KEY";
+        String PDF_REPORT = "PDF_REPORT";
+    }
 }

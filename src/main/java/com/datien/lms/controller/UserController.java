@@ -22,41 +22,37 @@ public class UserController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> register(
             @RequestBody UserRequest request
-    ) throws MessagingException {
-        userService.register(request);
-        return ResponseEntity.accepted().build();
+    ) {
+        return ResponseEntity.ok(userService.register(request));
     }
 
     @GetMapping("/activate-account")
-    public void activateAccount(
+    public ResponseEntity<?> activateAccount(
             @RequestParam String activationCode
     ) throws MessagingException {
-        userService.activateAccount(activationCode);
+        return ResponseEntity.ok(userService.activateAccount(activationCode));
     }
 
     @PatchMapping("/password/change")
     public ResponseEntity<?> changePassword(
             @RequestBody UserChangePasswordRequest request,
             Authentication connectedUser
-    ) throws IllegalAccessException {
-        userService.changePassword(request, connectedUser);
-        return ResponseEntity.ok().build();
+    ) {
+        return ResponseEntity.ok(userService.changePassword(request, connectedUser));
     }
 
     @PostMapping("/password/forgot")
     public ResponseEntity<?> forgotPassword(
             @RequestBody UserForgotPasswordRequest request
-    ) throws MessagingException {
-        userService.handleForgotPassword(request);
-        return ResponseEntity.ok().build();
+    ) {
+        return ResponseEntity.ok(userService.handleForgotPassword(request));
     }
 
     @PostMapping("/password/reset")
     public ResponseEntity<?> resetPassword(
             @RequestBody UserResetPasswordRequest request
-    ) throws MessagingException {
-        userService.handleResetPassword(request);
-        return ResponseEntity.ok().build();
+    ) {
+        return ResponseEntity.ok(userService.handleResetPassword(request));
     }
 
 }
