@@ -3,6 +3,7 @@ package com.datien.lms.service;
 import com.datien.lms.common.AppConstant;
 import com.datien.lms.common.Result;
 import com.datien.lms.dao.Book;
+import com.datien.lms.dao.BookTransactionHistory;
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.BookRequest;
@@ -30,6 +31,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final com.datien.lms.repository.BookTransactionHistory bookTransactionHistory;
 
 //    public void createBook(
 //            BookRequest bookRequest,
@@ -57,7 +59,8 @@ public class BookService {
         try {
             User user = (User) connectedUser.getPrincipal();
             if(user.getRole() != Role.ADMIN) {
-                throw new AccessDeniedException("You do not have permission to access this resource");
+                result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
 
             var book = new Book();
@@ -103,52 +106,136 @@ public class BookService {
         return resultExecuted;
     }
 
+    public Map<Object, Object> getDetailBook(Long bookId) {
+        Map<Object, Object> resultExecuted = new HashMap<>();
+        Result result = Result.OK("");
 
-    public BookResponse getDetailBook(Long bookId) {
-        var book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("No book found with the Id " + bookId));
-        return bookMapper.toBookResponse(book);
-    }
+        try {
+            var book = bookRepository.findById(bookId)
+                    .orElseThrow(() -> new EntityNotFoundException("No book found with Id: " + bookId));
+            var savedBook = bookMapper.toBookResponse(book);
 
-    public void deleteBook(Long bookId) {
-        bookRepository.deleteById(bookId);
-    }
-
-    public Page<BorrowBookResponse> getAllBorrowedBooks(int page, int size, Authentication connectedUser) {
-        User user = (User) connectedUser.getPrincipal();
-        if(user.getRole() != Role.ADMIN) {
-            throw new AccessDeniedException("You don't have permission to see borrowed books of the library");
+            resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, savedBook);
+        } catch (Exception ex) {
+            result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
+            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         }
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("borrowDate").descending());
-        Page<Book> borrowedBooks = bookRepository.findAllByIsAvailableFalse(pageable);
-        List<BorrowBookResponse> borrowBookResponses = borrowedBooks
-                .stream()
-                .map(bookMapper::toBorrowBookResponse)
-                .collect(Collectors.toList());
-        return new PageImpl<>(borrowBookResponses, pageable, borrowedBooks.getTotalElements());
+        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        return resultExecuted;
+
     }
 
-    public Integer borrowBook(Long bookId, Authentication connectedUser) {
-        User user = (User) connectedUser.getPrincipal();
+//    public BookResponse getDetailBook(Long bookId) {
+//        var book = bookRepository.findById(bookId)
+//                .orElseThrow(() -> new EntityNotFoundException("No book found with the Id " + bookId));
+//        return bookMapper.toBookResponse(book);
+//    }
 
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("No book found with the Id " + bookId));
+    public Map<Object, Object> deleteBook(Long bookId) {
+        Map<Object, Object> resultExecuted = new HashMap<>();
+        Result result = Result.OK("");
+        String notification = "";
+        try {
+            bookRepository.deleteById(bookId);
+            notification = "Successfully delete book.";
+        } catch (Exception ex) {
+            result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
+            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        }
+        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
+        return resultExecuted;
+    }
 
-        if(!book.isAvailable()) {
-            throw new OperationNotPermittedException("The requested book cannot be borrowed.");
+    public Map<Object, Object> getAllBorrowedBooks(int page, int size, Authentication connectedUser) {
+        Map<Object, Object> resultExecuted = new HashMap<>();
+        Result result = Result.OK("");
+        try {
+
+            User user = (User) connectedUser.getPrincipal();
+            if (user.getRole() != Role.ADMIN) {
+                result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            }
+
+            Pageable pageable = PageRequest.of(page, size, Sort.by("borrowDate").descending());
+            Page<Book> borrowedBooks = bookRepository.findAllByIsAvailableFalse(pageable);
+            List<BorrowBookResponse> borrowBookResponses = borrowedBooks
+                    .stream()
+                    .map(bookMapper::toBorrowBookResponse1)
+                    .toList();
+            Page<BorrowBookResponse> responsePage = new PageImpl<>(borrowBookResponses, pageable, borrowedBooks.getTotalElements());
+            resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, responsePage);
+        } catch (Exception ex) {
+            result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
+            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        }
+        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        return resultExecuted;
+    }
+
+    public Map<Object, Object> borrowBook(Long bookId, Authentication connectedUser) {
+        Map<Object, Object> resultExecuted = new HashMap<>();
+        Result result = Result.OK("");
+        String notification = "";
+
+        try {
+            User user = (User) connectedUser.getPrincipal();
+            if (user.getRole() != Role.ADMIN) {
+                result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            }
+
+            Book book = bookRepository.findById(bookId)
+                    .orElseThrow(() -> new EntityNotFoundException("No book found with the Id " + bookId));
+
+            if (!book.isAvailable()) {
+                result = new Result(ResponseCode.BOOK_NOT_AVAILABLE.getCode(), false, ResponseCode.BOOK_NOT_AVAILABLE.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            }
+
+            book.setAvailable(false);
+            bookRepository.save(book);
+            notification = "Successfully borrowed book with the Id " + bookId;
+
+            resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, book.getId().intValue());
+        } catch (Exception ex) {
+            result = new Result(ResponseCode.SYSTEM.getCode(), false, ex.getMessage());
+            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         }
 
-        book.setAvailable(false);
-        bookRepository.save(book);
-
-        return book.getId().intValue();
+        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
+        return resultExecuted;
     }
 
 
     public Map<Object, Object> findAllBookByISBN(
             String isbn, int page, int size, Authentication connectedUser
     ) {
-        return null;
+        Map<Object, Object> resultExecuted = new HashMap<>();
+        Result result = Result.OK("");
+
+        try {
+            User user = (User) connectedUser.getPrincipal();
+
+            if(user.getRole() != Role.ADMIN) {
+                result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            }
+
+            Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+//            Page<BookTransactionHistory> books = bookRepository.findByISBN(isbn, pageable, user.getId());
+//            List<BookResponse> bookResponses = books.stream()
+//                    .map(book -> bookMapper.toBorrowBookResponse(isbn, pageable, user.getId()))
+
+
+        } catch (Exception ex) {
+            result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
+            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        }
+        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        return resultExecuted;
     }
 }

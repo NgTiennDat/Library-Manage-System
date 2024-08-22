@@ -11,7 +11,6 @@ public class BorrowBookResponse {
     private String author;
     private String publisher;
     private String synopsis;
-    private double rate;
     private boolean returned;
     private boolean returnApproved;
 }

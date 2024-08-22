@@ -1,44 +1,36 @@
 package com.datien.lms.dao;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Entity
-@Table(name = "TBL_BOOK")
-public class Book {
+@Table(name = "BOOK_TRANSACTION_HISTORY")
+public class BookTransactionHistory {
+
     @Id
-    @GeneratedValue
-    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "TITLE")
-    private String title;
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    private User user;
 
-    @Column(name = "AUTHOR_NAME")
-    private String author;
+    @ManyToOne
+    @JoinColumn(name = "BOOK_ID")
+    private Book book;
 
-    @Column(name = "PUBLISHER")
-    private String publisher;
+    @Column(name = "RETURNED")
+    private boolean returned;
 
-    @Column(name = "ISBN")
-    private String ISBN;
-
-    @Column(name = "PAGE_COUNT")
-    private int pageCount;
-
-    @Column(name = "GENRE")
-    private String genre;
-
-    @Column(name = "SYNOPSIS")
-    private String synopsis;
-
-    @Column(name = "IS_AVAILABLE")
-    private boolean available;
+    @Column(name = "RETURN_APPROVED")
+    private boolean returnApproved;
 
     @CreatedDate
     @Column(name = "CREATED_AT", insertable = false)

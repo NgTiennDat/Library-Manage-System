@@ -1,11 +1,8 @@
 package com.datien.lms.controller;
 
 import com.datien.lms.dto.request.BookRequest;
-import com.datien.lms.dto.response.BookResponse;
-import com.datien.lms.dto.response.BorrowBookResponse;
 import com.datien.lms.service.BookService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -47,22 +44,20 @@ public class BookController {
 
     @GetMapping("/{book-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<BookResponse> getBook(
+    public ResponseEntity<?> getBook(
             @PathVariable("book-id") Long bookId
     ) {
-        bookService.getDetailBook(bookId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(bookService.getDetailBook(bookId));
     }
 
     @GetMapping("/borrowed")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<Page<BorrowBookResponse>> findAllBorrowedBook(
+    public ResponseEntity<?> findAllBorrowedBook(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser
     ) {
-        bookService.getAllBorrowedBooks(page, size, connectedUser);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(bookService.getAllBorrowedBooks(page, size, connectedUser));
     }
 
     @DeleteMapping("/{book-id}")
@@ -70,7 +65,6 @@ public class BookController {
     public ResponseEntity<?> deleteBook(
             @PathVariable("book-id") Long bookId
     ) {
-        bookService.deleteBook(bookId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(bookService.deleteBook(bookId));
     }
 }

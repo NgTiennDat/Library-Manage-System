@@ -14,12 +14,15 @@ public interface BookRepository extends JpaRepository<Book, Long> {
                 book.author,
                 book.publisher,
                 book.ISBN,
-                book.synopsis
+                book.synopsis,
                 book.genre,
+                user.userId
             FROM Book book
+            INNER JOIN User user ON book.userId = user.id
             WHERE book.ISBN = :isbn
-            AND book.available = true
+            AND book.available = true;
             """;
+
     @Query("""
            SELECT book
            FROM Book book
@@ -28,6 +31,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Page<Book> findAllByIsAvailableFalse(Pageable pageable);
 
     @Query(nativeQuery = true, value = findByISBN)
-    Page<Book> findByISBN(String isbn, Pageable pageable);
+    Page<Book> findByISBN(String isbn, Pageable pageable, Long userId);
     ;
 }
