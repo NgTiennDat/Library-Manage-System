@@ -40,6 +40,9 @@ public class Book {
     @Column(name = "IS_AVAILABLE")
     private boolean available;
 
+    @Column(name = "IS_ARCHIVED")
+    private boolean archived;
+
     @CreatedDate
     @Column(name = "CREATED_AT", insertable = false)
     private LocalDateTime createdAt;

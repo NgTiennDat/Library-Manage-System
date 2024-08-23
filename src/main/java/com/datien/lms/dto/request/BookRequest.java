@@ -40,4 +40,7 @@ public class BookRequest {
 
     @NotNull(message = "Availability status is mandatory.")
     private boolean available;
+
+    @NotNull(message = "Archived status is mandatory")
+    private boolean archived;
 }

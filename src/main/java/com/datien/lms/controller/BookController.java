@@ -63,8 +63,10 @@ public class BookController {
     @DeleteMapping("/{book-id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> deleteBook(
-            @PathVariable("book-id") Long bookId
+            @PathVariable("book-id") Long bookId,
+            @RequestParam("hardDelete") boolean hardDelete,
+            Authentication connectedUser
     ) {
-        return ResponseEntity.ok(bookService.deleteBook(bookId));
+        return ResponseEntity.ok(bookService.deleteBook(bookId, hardDelete, connectedUser));
     }
 }

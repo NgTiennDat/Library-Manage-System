@@ -1,6 +1,7 @@
 package com.datien.lms.controller;
 
 import com.datien.lms.dto.request.AdminRequest;
+import com.datien.lms.dto.request.StudentRequest;
 import com.datien.lms.dto.response.StudentResponse;
 import com.datien.lms.service.AdminService;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -23,7 +24,7 @@ import java.nio.file.AccessDeniedException;
 public class AdminController {
     private final AdminService adminService;
 
-    @GetMapping("/{adminId}")
+    @GetMapping("/{student-id}")
     @PreAuthorize("hasAuthority('admin::read')")
     @Operation(
             description = "Get an admin by ID",
@@ -34,11 +35,10 @@ public class AdminController {
             }
     )
     public ResponseEntity<?> getStudentId(
-            @PathVariable Long userId,
+            @PathVariable("student-id") Long studentId,
             Authentication connectedUser
-    ) throws AccessDeniedException {
-        var admin = adminService.getStudentById(userId, connectedUser);
-        return ResponseEntity.ok(admin);
+    ) {
+        return ResponseEntity.ok(adminService.getStudentById(studentId, connectedUser));
     }
 
     @PostMapping
@@ -53,8 +53,8 @@ public class AdminController {
             }
     )
     public ResponseEntity<?> create(
-            @RequestBody AdminRequest request, Authentication connectedUser
-    ) throws AccessDeniedException {
+            @RequestBody StudentRequest request, Authentication connectedUser
+    ) {
         return ResponseEntity.ok(adminService.createUser(request, connectedUser));
     }
 
@@ -107,10 +107,10 @@ public class AdminController {
             }
     )
     public ResponseEntity<?> delete(
-            @PathVariable("student-id") Long adminId,
+            @PathVariable("student-id") Long studentId,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(adminService.deleteStudent(adminId, connectedUser));
+        return ResponseEntity.ok(adminService.deleteStudent(studentId, connectedUser));
     }
 
 }

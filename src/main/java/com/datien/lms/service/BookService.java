@@ -131,12 +131,27 @@ public class BookService {
 //        return bookMapper.toBookResponse(book);
 //    }
 
-    public Map<Object, Object> deleteBook(Long bookId) {
+    public Map<Object, Object> deleteBook(Long bookId, boolean hardDelete, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
         String notification = "";
+
         try {
-            bookRepository.deleteById(bookId);
+
+            User user = (User) connectedUser.getPrincipal();
+
+            if(user.getRole() == Role.STUDENT) {
+                result = new Result(ResponseCode.ROLE_NOT_VALID.getCode(), false, ResponseCode.ROLE_NOT_VALID.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            }
+
+            var book = bookRepository.findById(bookId).orElseThrow(() -> new EntityNotFoundException("No book found with Id: " + bookId));
+            if(!hardDelete) {
+                book.setArchived(true);
+            } else {
+                bookRepository.deleteById(bookId);
+
+            }
             notification = "Successfully delete book.";
         } catch (Exception ex) {
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());

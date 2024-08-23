@@ -49,7 +49,9 @@ public class ManagerService {
             admin.setEmail(request.getEmail());
             admin.setPassword(passwordEncoder.encode(request.getPassword()));
             admin.setRole(Role.ADMIN);
-            admin.setEnabled(true);
+            admin.setSex(request.getSex());
+            admin.setLoginCount(0);
+            admin.setPassword(request.getPhone());
             adminRepository.save(admin);
 
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
@@ -83,6 +85,9 @@ public class ManagerService {
                 admin.setEmail(request.getEmail());
                 admin.setPassword(passwordEncoder.encode(request.getPassword()));
                 admin.setRole(Role.ADMIN);
+                admin.setSex(request.getSex());
+                admin.setLoginCount(0);
+                admin.setPassword(request.getPhone());
                 adminRepository.save(admin);
             } else {
                 result = new Result(ResponseCode.ACCOUNT_LOCKED.getCode(), false, ResponseCode.ACCOUNT_LOCKED.getMessage());

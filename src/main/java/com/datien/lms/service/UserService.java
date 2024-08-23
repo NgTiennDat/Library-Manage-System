@@ -2,6 +2,7 @@ package com.datien.lms.service;
 
 import com.datien.lms.common.AppConstant;
 import com.datien.lms.common.Result;
+import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.UserChangePasswordRequest;
 import com.datien.lms.dto.request.UserForgotPasswordRequest;
@@ -47,6 +48,11 @@ public class UserService {
             newUser.setEnabled(request.isEnabled());
             newUser.setLoginCount(0);
 
+            if(newUser.getRole() != Role.STUDENT) {
+                result = new Result(ResponseCode.ROLE_NOT_VALID.getCode(), false, ResponseCode.ROLE_NOT_VALID.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            }
+
             userRepository.save(newUser);
             emailService.sendValidEmail(newUser);
 
@@ -68,7 +74,7 @@ public class UserService {
 
             if (savedCode.getExpiredAt().isBefore(LocalDateTime.now())) {
                 emailService.sendValidEmail(savedCode.getUser());
-                throw new RuntimeException("No code found. Maybe it has not been sent yet or has expired!");
+                result = new Result(ResponseCode.OTP_EXPIRED.getCode(), false, ResponseCode.OTP_EXPIRED.getMessage());
             }
 
             var user = userRepository.findById(savedCode.getUser().getId())
@@ -98,12 +104,14 @@ public class UserService {
             var user = (User) connectedUser.getPrincipal();
 
             if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-                throw new IllegalAccessException("Current password does not match");
+                result = new Result(ResponseCode.INCORRECT_CURRENT_PASSWORD.getCode(), false, ResponseCode.INCORRECT_CURRENT_PASSWORD.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
 
             // check if the two new passwords are the same
             if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-                throw new IllegalAccessException("Passwords do not match");
+                result = new Result(ResponseCode.PASSWORD_DOES_NOT_MATCH.getCode(), false, ResponseCode.PASSWORD_DOES_NOT_MATCH.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
 
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -133,7 +141,7 @@ public class UserService {
             var oldActivateCode = otpRepository.findByUserId(user.getId());
 
             if (oldActivateCode.isEmpty()) {
-                throw new IllegalArgumentException("No user with id: " + user.getId());
+                result = new Result(ResponseCode.OTP_NOTFOUND.getCode(), false, ResponseCode.OTP_NOTFOUND.getMessage());
             }
 
             otpRepository.delete(oldActivateCode.get());
@@ -166,7 +174,8 @@ public class UserService {
 
             if (activeCode.getExpiredAt().isBefore(LocalDateTime.now())) {
                 emailService.sendValidEmail(user);
-                throw new IllegalArgumentException("No user with id: " + user.getId());
+                result = new Result(ResponseCode.OTP_EXPIRED.getCode(), false, ResponseCode.OTP_EXPIRED.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
 
             user.setPassword(passwordEncoder.encode(userResetPassword.getNewPassword()));

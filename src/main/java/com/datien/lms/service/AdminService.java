@@ -7,12 +7,11 @@ import com.datien.lms.dao.Role;
 import com.datien.lms.dao.Student;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.AdminRequest;
-import com.datien.lms.dto.response.AdminResponse;
+import com.datien.lms.dto.request.StudentRequest;
 import com.datien.lms.dto.response.StudentResponse;
 import com.datien.lms.handlerException.ResponseCode;
 import com.datien.lms.repository.AdminRepository;
 import com.datien.lms.repository.StudentRepository;
-import com.datien.lms.service.mapper.AdminMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,9 +21,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.datien.lms.dao.Role.STUDENT;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +32,6 @@ public class AdminService {
 
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AdminMapper adminMapper;
     private final StudentRepository studentRepository;
 
     public Map<Object, Object> getStudentById(Long studentId, Authentication authentication) {
@@ -41,7 +40,7 @@ public class AdminService {
 
         try {
             User user = (User) authentication.getPrincipal();
-            if(user.getRole() ==  Role.STUDENT) {
+            if(user.getRole() ==  STUDENT) {
                 result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
@@ -57,33 +56,41 @@ public class AdminService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> createUser(AdminRequest request, Authentication connectedUser) {
+    public Map<Object, Object> createUser(StudentRequest request, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
 
         String notification = "";
         try {
-            var admin = new Admin();
+            var student = new Admin();
 
             User user = (User) connectedUser.getPrincipal();
-            if(user.getRole() ==  Role.STUDENT) {
+            if (user.getRole() == STUDENT) {
                 result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
 
-            admin.setFirstname(request.getFirstname());
-            admin.setLastname(request.getLastname());
-            admin.setEmail(request.getEmail());
-            admin.setPassword(passwordEncoder.encode(request.getPassword()));
-            admin.setRole(Role.ADMIN);
-            adminRepository.save(admin);
+            student.setFirstname(request.getFirstname());
+            student.setLastname(request.getLastname());
+            student.setEmail(request.getEmail());
+            student.setPassword(passwordEncoder.encode(request.getPassword()));
+            student.setPhone(request.getPhone());
+            student.setLoginCount(0);
+            student.setSex(request.getSex());
+            student.setEnabled(request.isEnabled());
+            student.setRole(request.getRole());
+
+            if(request.getRole() != STUDENT) {
+                result = new Result(ResponseCode.ROLE_NOT_VALID.getCode(), false, ResponseCode.ROLE_NOT_VALID.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            }
+
+            adminRepository.save(student);
 
         } catch (Exception ex) {
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         }
-
-        resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         return resultExecuted;
     }
@@ -99,7 +106,7 @@ public class AdminService {
 
         try {
             User user = (User) connectedUser.getPrincipal();
-            if(user.getRole() ==  Role.STUDENT) {
+            if(user.getRole() ==  STUDENT) {
                 result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
@@ -166,10 +173,9 @@ public class AdminService {
 
         try {
             User user = (User) connectedUser.getPrincipal();
-            if (user.getRole() == Role.STUDENT) {
+            if (user.getRole() == STUDENT) {
                 result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
-                return resultExecuted;
             }
 
             studentRepository.deleteById(studentId);
@@ -199,7 +205,6 @@ public class AdminService {
             if (user.getRole() != Role.ADMIN) {
                 result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
-                return resultExecuted;
             }
 
             Pageable pageable = PageRequest.of(page, size);
