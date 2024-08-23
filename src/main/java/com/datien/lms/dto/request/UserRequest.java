@@ -29,6 +29,9 @@ public class UserRequest {
     @Size(min = 8, message = "password has at least 8 characters.")
     private String password;
 
+    @NotBlank(message = "date of birth is mandatory")
+    private String dateOfBirth;
+
     @NotBlank(message = "phone is mandatory.")
     @Size(min = 10, message = "password has at least 10 characters.")
     private String phone;

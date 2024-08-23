@@ -11,4 +11,5 @@ public class AdminResponse {
     private String firstname;
     private String lastname;
     private String sex;
+    private String dateOfBirth;
 }

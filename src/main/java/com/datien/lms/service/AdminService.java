@@ -87,10 +87,12 @@ public class AdminService {
 
             adminRepository.save(student);
 
+            notification = "Create user successfully";
         } catch (Exception ex) {
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         }
+        resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         return resultExecuted;
     }
