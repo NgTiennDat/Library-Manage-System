@@ -41,8 +41,7 @@ public class ManagementController {
             @RequestBody AdminRequest request,
             Authentication connectedUser
     ) {
-        managerService.createAdmin(request, connectedUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Created successfully");
+        return ResponseEntity.ok(managerService.createAdmin(request, connectedUser));
     }
 
     @Operation(
@@ -66,8 +65,7 @@ public class ManagementController {
             @PathVariable("admin-id") Long adminId,
             Authentication connectedUser
     ) throws IllegalAccessException {
-        managerService.updateAdminInfo(request, adminId, connectedUser);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Updated successfully");
+        return ResponseEntity.ok(managerService.updateAdminInfo(request, adminId, connectedUser));
     }
 
     @Operation(
@@ -87,10 +85,10 @@ public class ManagementController {
     @DeleteMapping("/delete/{admin-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> deleteAdmin(
-            @PathVariable("admin-id") Long adminId
+            @PathVariable("admin-id") Long adminId,
+            Authentication connectedUser
     ) {
-        managerService.deleteAdmin(adminId);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Deleted successfully");
+        return ResponseEntity.ok(managerService.deleteAdmin(adminId, connectedUser));
     }
 
     @Operation(
@@ -105,13 +103,12 @@ public class ManagementController {
     )
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<AdminResponse>> getAllAdmins(
+    public ResponseEntity<?> getAllAdmins(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             Authentication connectedUser
     ) {
-        Page<AdminResponse> admins = managerService.getAllAdmins(page, size, connectedUser);
-        return ResponseEntity.status(HttpStatus.OK).body(admins);
+        return ResponseEntity.ok(managerService.getAllAdmins(page, size, connectedUser));
     }
 
     @Operation(
@@ -130,11 +127,10 @@ public class ManagementController {
     )
     @GetMapping("/detail/{admin-id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<AdminResponse> getAdminDetail(
+    public ResponseEntity<?> getAdminDetail(
             @PathVariable("admin-id") Long adminId,
             Authentication connectedUser
     ) {
-        managerService.getAdminDetail(adminId, connectedUser);
-        return ResponseEntity.ok().build();
+       return ResponseEntity.ok(managerService.getAdminDetail(adminId, connectedUser));
     }
 }

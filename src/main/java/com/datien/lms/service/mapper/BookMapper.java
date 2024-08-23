@@ -27,8 +27,8 @@ public class BookMapper {
         borrowBookResponse.setAuthor(book.getAuthor());
         borrowBookResponse.setPublisher(book.getPublisher());
         borrowBookResponse.setSynopsis(book.getSynopsis());
-        borrowBookResponse.setReturned(isReturned(book));
-        borrowBookResponse.setReturnApproved(isReturnApproved(book));
+//        borrowBookResponse.setReturned(isReturned(book));
+//        borrowBookResponse.setReturnApproved(isReturnApproved(book));
         return borrowBookResponse;
     }
 

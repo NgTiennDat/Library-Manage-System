@@ -32,3 +32,8 @@ application:
       expiration: 8640000
       refresh-token:
         expiration: 604800000
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html

@@ -31,7 +31,6 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
-    private final com.datien.lms.repository.BookTransactionHistory bookTransactionHistory;
 
 //    public void createBook(
 //            BookRequest bookRequest,
@@ -226,7 +225,7 @@ public class BookService {
             }
 
             Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-//            Page<BookTransactionHistory> books = bookRepository.findByISBN(isbn, pageable, user.getId());
+            Page<Book> books = bookRepository.findByISBN(isbn, pageable);
 //            List<BookResponse> bookResponses = books.stream()
 //                    .map(book -> bookMapper.toBorrowBookResponse(isbn, pageable, user.getId()))
 

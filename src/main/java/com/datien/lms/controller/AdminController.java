@@ -55,8 +55,7 @@ public class AdminController {
     public ResponseEntity<?> create(
             @RequestBody AdminRequest request, Authentication connectedUser
     ) throws AccessDeniedException {
-        adminService.createUser(request, connectedUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Created successfully");
+        return ResponseEntity.ok(adminService.createUser(request, connectedUser));
     }
 
     @GetMapping("/all")
@@ -69,13 +68,12 @@ public class AdminController {
                     @ApiResponse(description = "Admin not found", responseCode = "404")
             }
     )
-    public ResponseEntity<Page<StudentResponse>> getAll(
+    public ResponseEntity<?> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             Authentication connectedUser
-    ) throws AccessDeniedException {
-        adminService.getAllStudent(page, size, connectedUser);
-        return ResponseEntity.ok().build();
+    ) {
+        return ResponseEntity.ok(adminService.getAllStudent(page, size, connectedUser));
     }
 
     @PutMapping("/{adminId}")
@@ -93,9 +91,8 @@ public class AdminController {
             @RequestBody AdminRequest request,
             @PathVariable Long adminId,
             Authentication connectedUser
-    ) throws AccessDeniedException, IllegalAccessException {
-        adminService.updateAdminInfo(request, adminId, connectedUser);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Updated successfully");
+    ) {
+        return ResponseEntity.ok(adminService.updateAdminInfo(request, adminId, connectedUser));
     }
 
     @DeleteMapping("/{student-id}")
@@ -112,9 +109,8 @@ public class AdminController {
     public ResponseEntity<?> delete(
             @PathVariable("student-id") Long adminId,
             Authentication connectedUser
-    ) throws AccessDeniedException {
-        adminService.deleteStudent(adminId, connectedUser);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    ) {
+        return ResponseEntity.ok(adminService.deleteStudent(adminId, connectedUser));
     }
 
 }
