@@ -142,33 +142,6 @@ public class AdminService {
         return resultExecuted;
     }
 
-//    public AdminResponse updateAdminInfo(
-//            AdminRequest request,
-//            Long adminId,
-//            Authentication connectedUser
-//    ) throws AccessDeniedException, IllegalAccessException {
-//
-//        User user = (User) connectedUser.getPrincipal();
-//        if(user.getRole() != Role.ADMIN) {
-//            throw new AccessDeniedException("Access denied because your role is not ADMIN");
-//        }
-//
-//        var admin = adminRepository.findById(adminId)
-//                .orElseThrow(() -> new EntityNotFoundException("Admin not found."));
-//
-//        if(admin.isEnabled()) {
-//            admin.setFirstname(request.getFirstname());
-//            admin.setLastname(request.getLastname());
-//            admin.setEmail(request.getEmail());
-//            admin.setPassword(passwordEncoder.encode(request.getPassword()));
-//            admin.setRole(Role.ADMIN);
-//        } else {
-//            throw new IllegalAccessException("Admin is not active.");
-//        }
-//        adminRepository.save(admin);
-//        return adminMapper.toAdminResponse(admin);
-//    }
-
     public Map<Object, Object> deleteStudent(Long studentId, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
