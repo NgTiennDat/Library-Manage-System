@@ -8,7 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/api/v2/book")
+@RestController
+@RequestMapping("/api/v2/book")
 @RequiredArgsConstructor
 public class BookController {
 
@@ -24,12 +25,12 @@ public class BookController {
     }
 
     @PostMapping("/create")
-    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> createBook(
             @RequestBody BookRequest bookRequest,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(bookService.createBook(bookRequest, connectedUser));
+        bookService.createBook(bookRequest, connectedUser);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/all")

@@ -2,6 +2,7 @@ package com.datien.lms.service;
 
 import com.datien.lms.common.AppConstant;
 import com.datien.lms.common.Result;
+import com.datien.lms.dao.Otp;
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.UserChangePasswordRequest;
@@ -65,7 +66,7 @@ public class UserService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> activateAccount(String activationCode) throws MessagingException {
+    public Map<Object, Object> activateAccount(String activationCode) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
         String notification = "";
@@ -73,16 +74,19 @@ public class UserService {
             var savedCode = otpRepository.findByCode(activationCode);
 
             if (savedCode.getExpiredAt().isBefore(LocalDateTime.now())) {
+                otpRepository.delete(savedCode);
+                notification = "OTP has expired, another OTP has sent.";
                 emailService.sendValidEmail(savedCode.getUser());
                 result = new Result(ResponseCode.OTP_EXPIRED.getCode(), false, ResponseCode.OTP_EXPIRED.getMessage());
+            } else {
+                var user = userRepository.findById(savedCode.getUser().getId())
+                        .orElseThrow(() -> new EntityNotFoundException("No user found with the Id " + savedCode.getUser().getId()));
+
+                user.setEnabled(true);
+                notification = "Successfully activated account";
+                userRepository.save(user);
             }
 
-            var user = userRepository.findById(savedCode.getUser().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("No user found with the Id " + savedCode.getUser().getId()));
-
-            user.setEnabled(true);
-            notification = "Successfully activated account";
-            userRepository.save(user);
 
         } catch (Exception ex) {
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
@@ -142,6 +146,8 @@ public class UserService {
 
             if (oldActivateCode.isEmpty()) {
                 result = new Result(ResponseCode.OTP_NOTFOUND.getCode(), false, ResponseCode.OTP_NOTFOUND.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                return resultExecuted;
             }
 
             otpRepository.delete(oldActivateCode.get());
@@ -149,6 +155,9 @@ public class UserService {
             userRepository.save(user);
             emailService.sendValidEmail(user);
             notification = "Forgot password verified.";
+        } catch (MessagingException ex) {
+            result = new Result(ResponseCode.EMAIL_ERROR.getCode(), false, ResponseCode.EMAIL_ERROR.getMessage());
+            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         } catch (Exception ex) {
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
@@ -158,7 +167,6 @@ public class UserService {
         resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         return resultExecuted;
     }
-
 
     public Map<Object, Object> handleResetPassword(UserResetPasswordRequest userResetPassword) {
         Map<Object, Object> resultExecuted = new HashMap<>();

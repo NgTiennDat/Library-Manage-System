@@ -35,7 +35,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(name = "DATE_OF_BIRTH")
-    private Date dateOfBirth;
+    private String dateOfBirth;
 
     @Column(name = "PHONE_NUMBER")
     private String phone;
@@ -53,9 +53,6 @@ public class User implements UserDetails {
     @Column(name = "USER_SEX")
     @Enumerated(EnumType.STRING)
     private SEX sex;
-
-//    @OneToMany
-//    List<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

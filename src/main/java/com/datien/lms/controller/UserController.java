@@ -29,7 +29,7 @@ public class UserController {
     @GetMapping("/activate-account")
     public ResponseEntity<?> activateAccount(
             @RequestParam String activationCode
-    ) throws MessagingException {
+    ) {
         return ResponseEntity.ok(userService.activateAccount(activationCode));
     }
 

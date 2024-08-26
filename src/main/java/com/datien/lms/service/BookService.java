@@ -12,6 +12,7 @@ import com.datien.lms.dto.response.BorrowBookResponse;
 import com.datien.lms.exception.OperationNotPermittedException;
 import com.datien.lms.handlerException.ResponseCode;
 import com.datien.lms.repository.BookRepository;
+import com.datien.lms.repository.UserRepository;
 import com.datien.lms.service.mapper.BookMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,56 +33,81 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final UserRepository userRepository;
 
-//    public void createBook(
-//            BookRequest bookRequest,
-//            Authentication connectedUser
-//    ) {
-//        User user = (User) connectedUser;
-//        if(user.getRole() != Role.ADMIN) {
-//            throw new AccessDeniedException("You dont have permission to add book to the library");
-//        }
-//
-//        var book = new Book();
-//        book.setTitle(bookRequest.getTitle());
-//        book.setAuthor(bookRequest.getAuthor());
-//        book.setPublisher(bookRequest.getPublisher());
-//        book.setSynopsis(bookRequest.getSynopsis());
-//        book.setGenre(bookRequest.getGenre());
-//        book.setAvailable(true);
-//        bookRepository.save(book);
-//    }
-
-    public Map<Object, Object> createBook(BookRequest bookRequest, Authentication connectedUser) {
-        Map<Object, Object> resultExecuted = new HashMap<>();
-        Result result = new Result();
-
-        try {
-            User user = (User) connectedUser.getPrincipal();
-            if(user.getRole() != Role.ADMIN) {
-                result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
-                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
-            }
-
-            var book = new Book();
-            book.setTitle(bookRequest.getTitle());
-            book.setAuthor(bookRequest.getAuthor());
-            book.setPublisher(bookRequest.getPublisher());
-            book.setISBN(bookRequest.getISBN());
-            book.setSynopsis(bookRequest.getSynopsis());
-            book.setPageCount(bookRequest.getPageCount());
-            book.setGenre(bookRequest.getGenre());
-            book.setAvailable(true);
-
-            bookRepository.save(book);
-        } catch (Exception ex) {
-            result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
-            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+    public void createBook(
+            BookRequest bookRequest,
+            Authentication connectedUser
+    ) {
+        User user = (User) connectedUser.getPrincipal();
+        if(user.getRole() != Role.ADMIN) {
+            throw new AccessDeniedException("You dont have permission to add book to the library");
         }
 
-        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
-        return resultExecuted;
+        var book = new Book();
+        book.setTitle(bookRequest.getTitle());
+        book.setAuthor(bookRequest.getAuthor());
+        book.setPublisher(bookRequest.getPublisher());
+        book.setISBN(bookRequest.getISBN());
+        book.setSynopsis(bookRequest.getSynopsis());
+        book.setPageCount(bookRequest.getPageCount());
+        book.setGenre(bookRequest.getGenre());
+        book.setAvailable(bookRequest.isAvailable());
+        book.setArchived(bookRequest.isArchived());
+        book.setCreatedBy(user.getId()); // Sử dụng biến user đã khai báo
+        book.setLastModifiedBy(user.getUsername());
+        bookRepository.save(book);
+
     }
+
+//    public Map<Object, Object> createBook(BookRequest bookRequest, Authentication connectedUser) {
+//        Map<Object, Object> resultExecuted = new HashMap<>();
+//        Result result;
+//
+//        try {
+//
+//            var user1 = userRepository.findByEmail(connectedUser.getName());
+//
+//            if(user1.isEmpty()) {
+//                result = new Result(ResponseCode.USER_NOTFOUND.getCode(), false, ResponseCode.USER_NOTFOUND.getMessage());
+//                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+//            }
+//
+//            if(!user1.get().isEnabled()) {
+//                result = new Result(ResponseCode.ACCOUNT_LOCKED.getCode(), false, ResponseCode.ACCOUNT_LOCKED.getMessage());
+//                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+//            }
+//
+////            User user = (User) connectedUser.getPrincipal(); // Khai báo biến user ở đây
+//            if (user1.get().getRole() == Role.STUDENT) {
+//                result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
+//                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+//                return resultExecuted;
+//            }
+//
+//            var book = new Book();
+//            book.setTitle(bookRequest.getTitle());
+//            book.setAuthor(bookRequest.getAuthor());
+//            book.setPublisher(bookRequest.getPublisher());
+//            book.setISBN(bookRequest.getISBN());
+//            book.setSynopsis(bookRequest.getSynopsis());
+//            book.setPageCount(bookRequest.getPageCount());
+//            book.setGenre(bookRequest.getGenre());
+//            book.setAvailable(bookRequest.isAvailable());
+//            book.setArchived(bookRequest.isArchived());
+//            book.setCreatedBy(user1.get().getId()); // Sử dụng biến user đã khai báo
+//            book.setLastModifiedBy(user1.get().getUsername());
+//
+//            bookRepository.save(book);
+//
+//            result = new Result(ResponseCode.SYSTEM.getCode(), true, ResponseCode.SYSTEM.getMessage());
+//        } catch (Exception ex) {
+//            result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
+//        }
+//
+//        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+//        return resultExecuted;
+//    }
 
     public Map<Object, Object> getAllBook(int page, int size) {
         Map<Object, Object> resultExecuted = new HashMap<>();

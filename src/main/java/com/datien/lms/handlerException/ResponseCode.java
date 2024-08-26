@@ -33,7 +33,14 @@ public enum ResponseCode {
     BOOK_NOT_FOUND("ERR_601", "Book not found"),
     BOOK_NOT_AVAILABLE("ERR_602", "Book not available"),
     BOOK_ALREADY_BORROWED("ERR_603", "Book already borrowed"),
-    OPERATION_NOT_PERMITTED("ERR_604", "Operation not permitted");
+    OPERATION_NOT_PERMITTED("ERR_604", "Operation not permitted"),
+
+    // Email-related errors
+    EMAIL_ERROR("ERR_700", "Email error"),
+    EMAIL_NOT_FOUND("ERR_701", "Email not found"),
+    EMAIL_ALREADY_EXISTS("ERR_702", "Email already exists"),
+    EMAIL_SEND_FAILED("ERR_703", "Failed to send email");
+
 
     private final String code;
     private final String message;

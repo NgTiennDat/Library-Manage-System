@@ -2,9 +2,11 @@ package com.datien.lms.dao;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data
@@ -43,19 +45,17 @@ public class Book {
     @Column(name = "IS_ARCHIVED")
     private boolean archived;
 
-    @CreatedDate
+    @CreationTimestamp
     @Column(name = "CREATED_AT", insertable = false)
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
 
     @LastModifiedDate
     @Column(name = "MODIFIED_AT")
     private LocalDateTime lastModifiedAt;
 
-    @CreatedDate
     @Column(name = "CREATED_BY")
-    private String createdBy;
+    private Long createdBy;
 
-    @LastModifiedDate
     @Column(name = "MODIFIED_BY")
     private String lastModifiedBy;
 
