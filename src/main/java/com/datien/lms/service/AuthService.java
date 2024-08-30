@@ -11,13 +11,10 @@ import com.datien.lms.utils.JwtService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.login.AccountLockedException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,7 +74,6 @@ public class AuthService {
 
             data.setAccessToken(jwtToken);
             data.setNotification("Successfully logged in.");
-            user.setLoginCount(0);
 
         } catch (Exception ex) {
             result = new Result(ResponseCode.BAD_CREDENTIALS.getCode(), false, ResponseCode.BAD_CREDENTIALS.getMessage());

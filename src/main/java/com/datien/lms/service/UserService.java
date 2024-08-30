@@ -38,6 +38,14 @@ public class UserService {
         Result result = Result.OK("");
 
         try {
+            var email = userRepository.findByEmail(request.getEmail());
+
+            if(email.isPresent()) {
+               result = new Result(ResponseCode.EMAIL_ALREADY_EXISTS.getCode(), false, ResponseCode.EMAIL_ALREADY_EXISTS.getMessage());
+               resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+               return resultExecuted;
+            }
+
             User newUser = new User();
             newUser.setFirstname(request.getFirstname());
             newUser.setLastname(request.getLastname());

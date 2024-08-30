@@ -5,7 +5,6 @@ import com.datien.lms.dto.request.UserForgotPasswordRequest;
 import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.dto.request.UserResetPasswordRequest;
 import com.datien.lms.service.UserService;
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +50,7 @@ public class UserController {
     @PostMapping("/password/reset")
     public ResponseEntity<?> resetPassword(
             @RequestBody UserResetPasswordRequest request
-    ) {
+    ) { 
         return ResponseEntity.ok(userService.handleResetPassword(request));
     }
 
