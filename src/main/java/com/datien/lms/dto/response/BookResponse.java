@@ -1,15 +1,14 @@
 package com.datien.lms.dto.response;
 
+import com.datien.lms.dto.BookDto;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
 public class BookResponse {
-    private String title;
-    private String author;
-    private String publisher;
-    private String synopsis;
-    private String genres;
-    private boolean available;
+    private List<BookDto> books;
+    private int totalRecords;
 }

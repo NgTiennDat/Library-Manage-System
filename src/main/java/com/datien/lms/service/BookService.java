@@ -6,12 +6,17 @@ import com.datien.lms.dao.Book;
 import com.datien.lms.dao.BookTransactionHistory;
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
+import com.datien.lms.dto.BookDto;
+import com.datien.lms.dto.BookTransactionDto;
 import com.datien.lms.dto.request.BookRequest;
 import com.datien.lms.dto.response.BookResponse;
+import com.datien.lms.dto.response.BookTransactionResponse;
 import com.datien.lms.dto.response.BorrowBookResponse;
+import com.datien.lms.dto.response.UserResponse;
 import com.datien.lms.exception.OperationNotPermittedException;
 import com.datien.lms.handlerException.ResponseCode;
 import com.datien.lms.repository.BookRepository;
+import com.datien.lms.repository.BookTransactionHistoryRepository;
 import com.datien.lms.repository.UserRepository;
 import com.datien.lms.service.mapper.BookMapper;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,6 +27,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +40,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final UserRepository userRepository;
+    private final BookTransactionHistoryRepository bookTransactionHistoryRepository;
 
     public void createBook(
             BookRequest bookRequest,
@@ -189,32 +196,6 @@ public class BookService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> getAllBorrowedBooks(int page, int size, Authentication connectedUser) {
-        Map<Object, Object> resultExecuted = new HashMap<>();
-        Result result = Result.OK("");
-        try {
-
-            User user = (User) connectedUser.getPrincipal();
-            if (user.getRole() != Role.ADMIN) {
-                result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
-                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
-            }
-
-            Pageable pageable = PageRequest.of(page, size, Sort.by("borrowDate").descending());
-            Page<Book> borrowedBooks = bookRepository.findAllByIsAvailableFalse(pageable);
-            List<BorrowBookResponse> borrowBookResponses = borrowedBooks
-                    .stream()
-                    .map(bookMapper::toBorrowBookResponse1)
-                    .toList();
-            Page<BorrowBookResponse> responsePage = new PageImpl<>(borrowBookResponses, pageable, borrowedBooks.getTotalElements());
-            resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, responsePage);
-        } catch (Exception ex) {
-            result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
-            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
-        }
-        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
-        return resultExecuted;
-    }
 
     public Map<Object, Object> borrowBook(Long bookId, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
@@ -278,5 +259,91 @@ public class BookService {
         }
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         return resultExecuted;
+    }
+
+    public Map<Object, Object> getAllBorrowedBooks(int page, int size, Authentication connectedUser) {
+        Map<Object, Object> resultExecuted = new HashMap<>();
+        Result result = Result.OK("");
+        BookTransactionResponse bookTransactionResponse = new BookTransactionResponse();
+        List<BookTransactionDto> bookTransactionDtos = new ArrayList<>();
+        try {
+            User user = (User) connectedUser.getPrincipal();
+            if (user.getRole() == Role.STUDENT) {
+                result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                return resultExecuted;
+            }
+
+            // Fetch the borrowed books based on pagination
+            Pageable pageable = PageRequest.of(page, size);
+            Page<BookTransactionHistory> bookTransactions = bookTransactionHistoryRepository.findAllByStatus(pageable);
+
+            // Convert to DTOs
+            bookTransactionDtos = bookTransactions.stream()
+                    .map(bookTransaction -> {
+                        BookTransactionDto bookTransactionDto = new BookTransactionDto();
+                        bookTransactionDto.setBook(bookTransaction.getBook());
+                        bookTransactionDto.setUserId(bookTransaction.getUserId());
+                        return bookTransactionDto;
+                    }).collect(Collectors.toList());
+
+            bookTransactionResponse.setBookTransactionDtos(bookTransactionDtos);
+            bookTransactionResponse.setTotalRecords((int) bookTransactions.getTotalElements());
+            bookTransactionResponse.setTotalPages(bookTransactions.getTotalPages());
+
+//            result = new Result(ResponseCode.SUCCESS.getCode(), true, ResponseCode.SUCCESS.getMessage());
+            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, bookTransactionResponse);
+
+        } catch (Exception ex) {
+            result = new Result(ResponseCode.SYSTEM.getCode(), false, ex.getMessage());
+            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        }
+
+        return resultExecuted;
+    }
+
+
+    public Map<Object, Object> getAllReturnedBooks(int page, int size, Authentication connectedUser) {
+        Map<Object, Object> resultExecute = new HashMap<>();
+        Result result = new Result();
+
+        BookTransactionResponse bookTransactionResponse = new BookTransactionResponse();
+        List<BookTransactionDto> bookTransactionDtos = new ArrayList<>();
+        try {
+            User user = (User) connectedUser.getPrincipal();
+            if(user.getRole() == Role.STUDENT) {
+                result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
+                resultExecute.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                return resultExecute;
+            }
+
+            List<BookTransactionHistory> bookTransactions = bookTransactionHistoryRepository.findAllByReturned();
+
+            bookTransactionDtos = bookTransactions.stream()
+                    .map(bookTransaction -> {
+                        BookTransactionDto bookTransactionDto = new BookTransactionDto();
+                        bookTransactionDto.setBook(bookTransaction.getBook());
+                        bookTransactionDto.setUserId(bookTransaction.getUserId());
+                        bookTransactionDto.setReturned(bookTransaction.isReturned());
+                        bookTransactionDto.setReturnApproved(bookTransaction.isReturnApproved());
+                        return bookTransactionDto;
+                    }).toList();
+
+            List<BookTransactionDto> paginatedList = bookTransactionDtos.stream()
+                    .skip((long) page * size)
+                    .limit(size)
+                    .toList();
+
+            bookTransactionResponse.setBookTransactionDtos(paginatedList);
+            bookTransactionResponse.setTotalRecords(bookTransactionDtos.size());
+
+        } catch (Exception ex) {
+            result = new Result(ResponseCode.SYSTEM.getCode(), false, ex.getMessage());
+            resultExecute.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        }
+
+        resultExecute.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        return resultExecute;
     }
 }

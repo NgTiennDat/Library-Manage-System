@@ -61,6 +61,17 @@ public class BookController {
         return ResponseEntity.ok(bookService.getAllBorrowedBooks(page, size, connectedUser));
     }
 
+    @GetMapping("/returned")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> findAllReturnedBook(
+            @RequestParam(name = "page", defaultValue = "10", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "0", required = false) int size,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(bookService.getAllReturnedBooks(page, size, connectedUser));
+    }
+
+
     @DeleteMapping("/{book-id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> deleteBook(
@@ -70,4 +81,5 @@ public class BookController {
     ) {
         return ResponseEntity.ok(bookService.deleteBook(bookId, hardDelete, connectedUser));
     }
+
 }

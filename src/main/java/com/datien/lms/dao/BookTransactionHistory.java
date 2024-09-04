@@ -15,16 +15,18 @@ import java.time.LocalDateTime;
 public class BookTransactionHistory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    @ManyToOne
     @JoinColumn(name = "USER_ID")
-    private User user;
+    private Long userId;
 
     @ManyToOne
     @JoinColumn(name = "BOOK_ID")
     private Book book;
+
+    @Column(name = "STATUS")
+    private String status;
 
     @Column(name = "RETURNED")
     private boolean returned;
@@ -36,16 +38,11 @@ public class BookTransactionHistory {
     @Column(name = "CREATED_AT", insertable = false)
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
-    @Column(name = "MODIFIED_AT")
-    private LocalDateTime lastModifiedAt;
-
     @CreatedDate
     @Column(name = "CREATED_BY")
     private String createdBy;
 
-    @LastModifiedDate
-    @Column(name = "MODIFIED_BY")
-    private String lastModifiedBy;
-
+    @CreatedDate
+    @Column(name = "RETURN_DATE")
+    private LocalDateTime returnDate;
 }
