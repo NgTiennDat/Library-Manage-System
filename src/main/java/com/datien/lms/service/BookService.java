@@ -6,14 +6,10 @@ import com.datien.lms.dao.Book;
 import com.datien.lms.dao.BookTransactionHistory;
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
-import com.datien.lms.dto.BookDto;
 import com.datien.lms.dto.BookTransactionDto;
 import com.datien.lms.dto.request.BookRequest;
 import com.datien.lms.dto.response.BookResponse;
 import com.datien.lms.dto.response.BookTransactionResponse;
-import com.datien.lms.dto.response.BorrowBookResponse;
-import com.datien.lms.dto.response.UserResponse;
-import com.datien.lms.exception.OperationNotPermittedException;
 import com.datien.lms.handlerException.ResponseCode;
 import com.datien.lms.repository.BookRepository;
 import com.datien.lms.repository.BookTransactionHistoryRepository;
@@ -21,12 +17,13 @@ import com.datien.lms.repository.UserRepository;
 import com.datien.lms.service.mapper.BookMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +34,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookService {
 
+    private final Logger logger = LogManager.getLogger(BookService.class);
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final UserRepository userRepository;
@@ -204,7 +202,7 @@ public class BookService {
 
         try {
             User user = (User) connectedUser.getPrincipal();
-            if (user.getRole() != Role.ADMIN) {
+            if (user.getRole() != Role.STUDENT) {
                 result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
@@ -232,6 +230,57 @@ public class BookService {
         return resultExecuted;
     }
 
+    public Map<Object, Object> returnBook(Long bookId, Authentication connectedUser) {
+        Map<Object, Object> resultExecuted = new HashMap<>();
+        Result result = Result.OK("");
+
+        try {
+            Book book = bookRepository.findById(bookId)
+                    .orElseThrow(() -> new EntityNotFoundException("No book found with the Id " + bookId));
+
+            User user = (User) connectedUser.getPrincipal();
+            if(user.getRole() != Role.STUDENT) {
+                result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            }
+            book.setAvailable(true);
+            bookRepository.save(book);
+
+        } catch (Exception ex) {
+            logger.error("Something errors occur!");
+            result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
+            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        }
+
+        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        return resultExecuted;
+    }
+
+    public Map<Object, Object> returnApproveBook(Long bookId, Authentication connectedUser) {
+        Map<Object, Object> resultExecute = new HashMap<>();
+        Result result = new Result();
+
+        try {
+            Book book = bookRepository.findById(bookId)
+                    .orElseThrow(() -> new EntityNotFoundException("No book found with the Id " + bookId));
+
+            User user = (User) connectedUser.getPrincipal();
+
+            if(user.getRole() == Role.STUDENT) {
+                result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
+                resultExecute.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            }
+            book.setAvailable(true);
+            bookRepository.save(book);
+
+        } catch (Exception ex) {
+            logger.error("Some errors occurs in returnApproveBook", ex);
+            result = new Result(ResponseCode.SYSTEM.getCode(), false, ex.getMessage());
+            resultExecute.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        }
+        resultExecute.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        return resultExecute;
+    }
 
     public Map<Object, Object> findAllBookByISBN(
             String isbn, int page, int size, Authentication connectedUser
@@ -249,11 +298,14 @@ public class BookService {
 
             Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
             Page<Book> books = bookRepository.findByISBN(isbn, pageable);
-//            List<BookResponse> bookResponses = books.stream()
-//                    .map(book -> bookMapper.toBorrowBookResponse(isbn, pageable, user.getId()))
+            List<BookResponse> bookResponses = books.stream()
+                    .map(bookMapper::toBookResponse)
+                    .toList();
 
+            resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, bookResponses);
 
         } catch (Exception ex) {
+            logger.error("Some errors occurs in findAllBookByISBN", ex);
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         }
@@ -346,4 +398,5 @@ public class BookService {
         resultExecute.put(AppConstant.RESPONSE_KEY.RESULT, result);
         return resultExecute;
     }
+
 }

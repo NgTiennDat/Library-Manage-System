@@ -14,6 +14,7 @@ public class BookMapper {
         bookResponse.setTitle(book.getTitle());
         bookResponse.setAuthor(book.getAuthor());
         bookResponse.setPublisher(book.getPublisher());
+        bookResponse.setISBN(book.getISBN());
         bookResponse.setSynopsis(book.getSynopsis());
         bookResponse.setAvailable(book.isAvailable());
         bookResponse.setGenres(book.getGenre());
