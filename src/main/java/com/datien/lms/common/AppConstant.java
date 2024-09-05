@@ -18,6 +18,5 @@ public class AppConstant {
         String RESULT = "RESULT_KEY";
         String DATA = "DATA_KEY";
         String NOTIFICATION = "NOTIFICATION_KEY";
-        String PDF_REPORT = "PDF_REPORT";
     }
 }
