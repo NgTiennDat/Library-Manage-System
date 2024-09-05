@@ -11,7 +11,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
 
     @Query("""
            SELECT fb
-           FROM Feedback fb
+           FROM tbl_feedback fb
            WHERE fb.book.id = :bookId
            """)
     List<Feedback> findAllByBookId(@Param("book-id") Long bookId);

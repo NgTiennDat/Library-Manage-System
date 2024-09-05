@@ -23,6 +23,7 @@ public enum ResponseCode {
     OTP_EXPIRED("ERR_308", "OTP expired"),
     OTP_NOTFOUND("ERR_310", "OTP not found"),
     USER_NOTFOUND("ERR_311", "User not found"),
+    FEEDBACK_NOTFOUND("ERR_312", "Feedback not found"),
 
     // Resource errors
     RESOURCE_NOT_FOUND("ERR_404", "Resource not found"),

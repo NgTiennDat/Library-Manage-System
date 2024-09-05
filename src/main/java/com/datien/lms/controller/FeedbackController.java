@@ -26,7 +26,8 @@ public class FeedbackController {
     }
 
     @GetMapping("{book-id}")
-    public ResponseEntity<?> getAllFeedback(
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> getAllFeedbackByBookId(
             @PathVariable("book-id") Long bookId,
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
@@ -35,13 +36,13 @@ public class FeedbackController {
         return ResponseEntity.ok(feedbackService.getAllFeedbackByBookId(bookId, pageSize, pageNumber, connectedUser));
     }
 
-    @GetMapping("/{feedback-id}")
+    @PostMapping("/update/{feedback-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<?> getFeedbackById(
+    public ResponseEntity<?> updateDetailFeedback(
             @PathVariable("feedback-id") Long feedbackId,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(feedbackService.getDetailedFeedback(feedbackId, connectedUser));
+        return ResponseEntity.ok(feedbackService.updateDetailedFeedback(feedbackId, connectedUser));
     }
 
 }

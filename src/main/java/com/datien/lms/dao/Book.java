@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "TBL_BOOK")
+@Table(name = "tbl_book")
 public class Book {
     @Id
     @GeneratedValue

@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -77,9 +74,13 @@ public class FeedbackService {
         List<FeedbackDto> feedbackDtos = new ArrayList<>();
 
         try {
+            var book = bookRepository.findById(bookId);
 
-            var book = bookRepository.findById(bookId)
-                    .orElseThrow(() -> new EntityNotFoundException("No book exist with the Id: " + bookId));
+            if(book.isEmpty()) {
+                result = new Result(ResponseCode.BOOK_NOT_FOUND.getCode(), false, ResponseCode.BOOK_NOT_FOUND.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                return resultExecuted;
+            }
 
             User user = (User) connectedUser.getPrincipal();
             if(user.getRole() == Role.STUDENT) {
@@ -118,27 +119,40 @@ public class FeedbackService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> getDetailedFeedback(Long feedbackId, Authentication connectedUser) {
+    public Map<Object, Object> updateDetailedFeedback(Long feedbackId, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = new Result();
 
-        FeedbackResponse feedbackResponse = new FeedbackResponse();
-        List<FeedbackDto> feedbackDtos = new ArrayList<>();
-
         try {
             User user = (User) connectedUser.getPrincipal();
-            if(user.getRole() == Role.STUDENT) {
+            if (user.getRole() == Role.STUDENT) {
                 result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                return resultExecuted;
             }
 
+            // Fetch the feedback by ID
+            Optional<Feedback> feedbackOptional = feedbackRepository.findById(feedbackId);
+            if (!feedbackOptional.isPresent()) {
+                result = new Result(ResponseCode.FEEDBACK_NOTFOUND.getCode(), false, ResponseCode.FEEDBACK_NOTFOUND.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                return resultExecuted;
+            }
+
+            Feedback feedback = feedbackOptional.get();
+
+            // Update feedback details
+            feedbackRepository.save(feedback);
+
+            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            resultExecuted.put("feedback", feedback);
+
         } catch (Exception ex) {
-            logger.error("Some errors occurred while getting the feedback", ex);
+            logger.error("Some errors occurred while updating the feedback", ex);
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         }
 
-        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         return resultExecuted;
     }
 
