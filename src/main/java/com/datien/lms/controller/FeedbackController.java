@@ -2,6 +2,7 @@ package com.datien.lms.controller;
 
 import com.datien.lms.dto.request.FeedbackRequest;
 import com.datien.lms.service.FeedbackService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class FeedbackController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> createFeedback(
-            FeedbackRequest request,
+            @RequestBody @Valid FeedbackRequest request,
             @RequestParam Long bookId,
             Authentication connectedUser
     ) {
@@ -51,6 +52,6 @@ public class FeedbackController {
             @PathVariable("feedback-id") Long feedbackId,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(feedbackService.deleteBook(feedbackId, connectedUser));
+        return ResponseEntity.ok(feedbackService.deleteFeedback(feedbackId, connectedUser));
     }
 }

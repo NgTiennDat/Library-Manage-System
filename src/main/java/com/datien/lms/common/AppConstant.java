@@ -19,4 +19,11 @@ public class AppConstant {
         String DATA = "DATA_KEY";
         String NOTIFICATION = "NOTIFICATION_KEY";
     }
+
+    public interface STATUS {
+        int ACTIVE = 0;
+        int IN_ACTIVE = 1;
+        String IS_DELETED = "Y";
+        String IS_UN_DELETED = "N";
+    }
 }

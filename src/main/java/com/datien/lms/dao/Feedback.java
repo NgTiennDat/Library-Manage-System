@@ -38,14 +38,7 @@ public class Feedback {
     @Column(name = "CREATED_AT", insertable = false)
     private Timestamp createdAt;
 
-    @LastModifiedDate
-    @Column(name = "MODIFIED_AT")
-    private LocalDateTime lastModifiedAt;
-
     @Column(name = "CREATED_BY")
     private Long createdBy;
-
-    @Column(name = "MODIFIED_BY")
-    private String lastModifiedBy;
 
 }

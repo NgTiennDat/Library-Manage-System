@@ -29,8 +29,7 @@ public class BookController {
             @RequestBody BookRequest bookRequest,
             Authentication connectedUser
     ) {
-        bookService.createBook(bookRequest, connectedUser);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.ok(bookService.createBook(bookRequest, connectedUser));
     }
 
     @GetMapping("/all")

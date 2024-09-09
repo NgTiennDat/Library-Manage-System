@@ -36,7 +36,6 @@ public class FeedbackService {
         Result result = new Result();
 
         try {
-
             User user = (User) connectedUser.getPrincipal();
             if(user.getRole() != Role.STUDENT) {
                 result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
@@ -52,6 +51,7 @@ public class FeedbackService {
             newFeedback.setDescription(request.getDescription());
             newFeedback.setBook(book);
             newFeedback.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+            newFeedback.setIsDeleted(AppConstant.STATUS.IS_UN_DELETED);
             newFeedback.setCreatedBy(user.getId());
 
             feedbackRepository.save(newFeedback);
@@ -156,8 +156,22 @@ public class FeedbackService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> deleteBook(Long feedbackId, Authentication connectedUser) {
+    public Map<Object, Object> deleteFeedback(Long feedbackId, Authentication connectedUser) {
+        Map<Object, Object> resultExecuted = new HashMap<>();
+        Result result = new Result();
 
-        return null;
+        try {
+            var feedback = feedbackRepository.findById(feedbackId)
+                    .orElseThrow(() -> new RuntimeException(ResponseCode.FEEDBACK_NOTFOUND.getCode()));
+            feedback.setIsDeleted(AppConstant.STATUS.IS_DELETED);
+            feedbackRepository.save(feedback);
+
+        } catch (Exception ex) {
+            logger.error("Some errors occurred while deleting the feedback", ex);
+            result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
+            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        }
+        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        return resultExecuted;
     }
 }
