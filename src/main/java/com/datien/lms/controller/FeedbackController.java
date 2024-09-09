@@ -45,5 +45,12 @@ public class FeedbackController {
         return ResponseEntity.ok(feedbackService.updateDetailedFeedback(feedbackId, connectedUser));
     }
 
-
+    @DeleteMapping("{feedback-id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> deleteFeedback(
+            @PathVariable("feedback-id") Long feedbackId,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(feedbackService.deleteBook(feedbackId, connectedUser));
+    }
 }

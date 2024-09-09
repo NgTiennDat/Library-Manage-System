@@ -156,4 +156,8 @@ public class FeedbackService {
         return resultExecuted;
     }
 
+    public Map<Object, Object> deleteBook(Long feedbackId, Authentication connectedUser) {
+
+        return null;
+    }
 }

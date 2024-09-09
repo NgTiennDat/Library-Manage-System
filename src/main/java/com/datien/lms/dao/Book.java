@@ -41,6 +41,9 @@ public class Book {
     @Column(name = "IS_AVAILABLE")
     private boolean available;
 
+    @Column(name = "IS_DELETED")
+    private String isDeleted;
+
     @Column(name = "IS_ARCHIVED")
     private boolean archived;
 

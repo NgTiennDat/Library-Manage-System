@@ -27,6 +27,9 @@ public class Feedback {
     @Column(name = "FEEDBACK_DESCRIPTION")
     private String description;
 
+    @Column(name = "IS_DELETED")
+    private String isDeleted;
+
     @ManyToOne
     @JoinColumn(name = "book-id")
     private Book book;

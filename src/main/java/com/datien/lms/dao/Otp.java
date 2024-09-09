@@ -23,6 +23,9 @@ public class Otp {
     private LocalDateTime validatedAt;
     private String username;
 
+    @Column(name = "IS_DELETED")
+    private String isDeleted;
+
     @OneToOne
     @JoinColumn(name = "userId")
     private User user;

@@ -46,6 +46,9 @@ public class User implements UserDetails {
     @Column(name = "LOGIN_COUNT")
     private int loginCount;
 
+    @Column(name = "IS_DELETED")
+    private String isDeleted;
+
     @Column(name = "USER_ROLE")
     @Enumerated(EnumType.STRING)
     private Role role;
