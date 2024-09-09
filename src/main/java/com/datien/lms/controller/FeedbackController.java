@@ -36,7 +36,7 @@ public class FeedbackController {
         return ResponseEntity.ok(feedbackService.getAllFeedbackByBookId(bookId, pageSize, pageNumber, connectedUser));
     }
 
-    @PostMapping("/update/{feedback-id}")
+    @PatchMapping("/update/{feedback-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> updateDetailFeedback(
             @PathVariable("feedback-id") Long feedbackId,
@@ -44,5 +44,6 @@ public class FeedbackController {
     ) {
         return ResponseEntity.ok(feedbackService.updateDetailedFeedback(feedbackId, connectedUser));
     }
+
 
 }

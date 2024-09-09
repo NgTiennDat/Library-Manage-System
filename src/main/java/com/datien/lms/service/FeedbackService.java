@@ -133,7 +133,7 @@ public class FeedbackService {
 
             // Fetch the feedback by ID
             Optional<Feedback> feedbackOptional = feedbackRepository.findById(feedbackId);
-            if (!feedbackOptional.isPresent()) {
+            if (feedbackOptional.isEmpty()) {
                 result = new Result(ResponseCode.FEEDBACK_NOTFOUND.getCode(), false, ResponseCode.FEEDBACK_NOTFOUND.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
                 return resultExecuted;
