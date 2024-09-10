@@ -2,11 +2,13 @@ package com.datien.lms.controller;
 
 import com.datien.lms.dto.request.BookRequest;
 import com.datien.lms.service.BookService;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v2/book")
@@ -107,6 +109,16 @@ public class BookController {
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(bookService.deleteBook(bookId, hardDelete, connectedUser));
+    }
+
+    @PostMapping(value = "/cover/{book-id}", consumes = "multipart/form-data")
+    public ResponseEntity<?> uploadBookCoverPicture(
+            @PathVariable("book-id") Long bookId,
+            @Parameter()
+            @RequestPart("file") MultipartFile file,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(bookService.uploadBookCoverPicture (file, connectedUser, bookId));
     }
 
 }

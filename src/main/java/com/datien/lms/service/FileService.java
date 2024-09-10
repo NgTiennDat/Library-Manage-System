@@ -20,7 +20,7 @@ public class FileService {
 
     private String fileUploadPath;
 
-    private String saveFile(
+    public String saveFile(
             @Nonnull MultipartFile sourceFile,
             @Nonnull Long bookId,
             @Nonnull Long userId

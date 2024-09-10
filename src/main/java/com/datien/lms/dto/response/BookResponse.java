@@ -11,6 +11,8 @@ public class BookResponse {
     private String publisher;
     private String ISBN;
     private String synopsis;
+    private double rate;
+    private byte[] coverImg;
     private boolean available;
     private String genres;
 }

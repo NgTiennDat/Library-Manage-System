@@ -23,6 +23,7 @@ import org.springframework.data.domain.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -41,6 +42,7 @@ public class BookService {
     private final BookMapper bookMapper;
     private final UserRepository userRepository;
     private final BookTransactionHistoryRepository bookTransactionHistoryRepository;
+    private final FileService fileService;
 
 //    public void createBook(
 //            BookRequest bookRequest,
@@ -402,4 +404,36 @@ public class BookService {
         return resultExecute;
     }
 
+    public Map<Object, Object> uploadBookCoverPicture(MultipartFile file, Authentication connectedUser, Long bookId) {
+        Map<Object, Object> resultExecuted = new HashMap<>();
+        Result result = Result.OK("");
+
+        try {
+            var book = bookRepository.findByIdAndIsDeleted(bookId);
+            if(book == null) {
+                result = new Result(ResponseCode.BOOK_NOT_FOUND.getCode(), false, ResponseCode.BOOK_NOT_FOUND.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                return resultExecuted;
+            }
+
+            User user = (User) connectedUser.getPrincipal();
+            if(user.getRole() == Role.STUDENT) {
+                result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                return resultExecuted;
+            }
+
+            var profilePicture = fileService.saveFile(file, bookId, user.getId());
+            book.setBookCover(profilePicture);
+            bookRepository.save(book);
+
+        } catch (Exception ex) {
+            logger.error("Some errors occurs in uploadBookCoverPicture", ex);
+            result = new Result(ResponseCode.SYSTEM.getCode(), false, ex.getMessage());
+            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        }
+
+        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        return resultExecuted;
+    }
 }

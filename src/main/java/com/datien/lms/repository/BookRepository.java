@@ -31,6 +31,14 @@ public interface BookRepository extends JpaRepository<Book, Long> {
            """)
     Page<Book> findAllByIsAvailableFalse(Pageable pageable);
 
+    @Query("""
+           SELECT book
+           FROM Book book
+           where book.available = true
+           AND book.isDeleted = 'N'
+           """)
+    Book findByIdAndIsDeleted(Long bookId);
+
     @Query(nativeQuery = true, value = findByISBN)
     Page<Book> findByISBN(@Param("isbn") String isbn, Pageable pageable);
 }
