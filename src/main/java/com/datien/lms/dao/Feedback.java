@@ -3,17 +3,16 @@ package com.datien.lms.dao;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "tbl_feedback")
+@Entity
+@Table(name = "tbl_feedback")
 public class Feedback {
 
     @Id
@@ -31,7 +30,7 @@ public class Feedback {
     private String isDeleted;
 
     @ManyToOne
-    @JoinColumn(name = "book-id")
+    @JoinColumn(name = "book_id")
     private Book book;
 
     @CreationTimestamp

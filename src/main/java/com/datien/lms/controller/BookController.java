@@ -27,6 +27,7 @@ public class BookController {
     }
 
     @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createBook(
             @RequestBody BookRequest bookRequest,
             Authentication connectedUser
@@ -35,6 +36,7 @@ public class BookController {
     }
 
     @GetMapping("/all")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> getAllBookByISBN(
             @RequestParam(name = "ISBN") String ISBN,
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
@@ -99,7 +101,6 @@ public class BookController {
     ) {
         return ResponseEntity.ok(bookService.returnApproveBook(bookId, connectedUser));
     }
-
 
     @DeleteMapping("/{book-id}")
     @ResponseStatus(HttpStatus.OK)

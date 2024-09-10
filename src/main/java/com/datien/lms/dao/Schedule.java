@@ -1,56 +1,49 @@
 package com.datien.lms.dao;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Entity(name = "tbl_schedule")
+@Entity
+@Table(name = "tbl_schedule")
+@Data
 public class Schedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SCHEDULE_ID")
-    private Long id;
+    private Long scheduleId;
 
-    @Column(name = "TITLE", nullable = false)
-    private String title;
+    @ManyToOne
+    @JoinColumn(name = "STUDENT_ID", nullable = false)
+    private User student;
 
-    @Column(name = "DESCRIPTION")
-    private String description;
+    @ManyToOne
+    @JoinColumn(name = "BOOK_ID", nullable = false)
+    private Book book;
 
-    @Column(name = "START_DATE", nullable = false)
-    private Date startDate;
+    @Column(name = "BORROW_DATE", nullable = false)
+    private LocalDateTime borrowDate;
 
-    @Column(name = "END_DATE")
-    private Date endDate;
+    @Column(name = "DUE_DATE", nullable = false)
+    private LocalDateTime dueDate;
+
+    @Column(name = "RETURN_DATE")
+    private LocalDateTime returnDate;
 
     @Column(name = "STATUS", nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ScheduleStatus status;
 
     @CreationTimestamp
-    @Column(name = "CREATED_AT", insertable = false, updatable = false)
-    private Timestamp createdAt;
+    @Column(name = "CREATED_DATE", nullable = false, updatable = false)
+    private LocalDateTime createdDate;
 
-    @LastModifiedDate
-    @Column(name = "MODIFIED_AT")
-    private LocalDateTime lastModifiedAt;
+    @UpdateTimestamp
+    @Column(name = "UPDATED_DATE")
+    private LocalDateTime updatedDate;
 
-    @Column(name = "CREATED_BY")
-    private Long createdBy;
-
-    @Column(name = "MODIFIED_BY")
-    private String lastModifiedBy;
-
-    @Column(name = "IS_DELETED", length = 1, nullable = false)
-    private String isDeleted;
 }

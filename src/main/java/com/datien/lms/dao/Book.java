@@ -66,7 +66,7 @@ public class Book {
     private String lastModifiedBy;
 
     @Column(name = "LIST_OF_FEEDBACK")
-    @OneToMany(mappedBy = "feedback")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Feedback> feedbacks;
 
     @Transient
