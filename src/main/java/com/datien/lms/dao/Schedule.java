@@ -46,4 +46,5 @@ public class Schedule {
     @Column(name = "UPDATED_DATE")
     private LocalDateTime updatedDate;
 
+
 }
