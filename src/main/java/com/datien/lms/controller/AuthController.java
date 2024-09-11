@@ -1,32 +1,51 @@
 package com.datien.lms.controller;
 
+import com.datien.lms.common.BaseResponse;
+import com.datien.lms.common.Result;
+import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.AuthRequest;
 import com.datien.lms.dto.response.AuthResponse;
+import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.AuthService;
+import com.datien.lms.utils.JwtService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
+    private final Logger logger = LogManager.getLogger(AuthController.class);
     public final AuthService service;
-//    @PostMapping("/register")
-//    public ResponseEntity<?> register(
-//            @Valid @RequestBody UserRequest request
-//    ) {
-//        service.register(request);
-//        return ResponseEntity.ok().build();
-//    }
+    private final JwtService jwtService;
+
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(
             @Valid @RequestBody AuthRequest request
     ) {
-        return ResponseEntity.ok(service.doLogin(request));
+        return ResponseEntity.ok(ResponseData.createResponse(service.doLogin(request)));
     }
+
+    @GetMapping(value = "/token")
+    public ResponseEntity<BaseResponse> generateToken() {
+        BaseResponse response = new BaseResponse();
+        response.setResult(Result.OK("Successful!"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof User) {
+                String token = jwtService.generateToken((User) principal);
+                AuthResponse authResponse = new AuthResponse(token, "Generate token successfully!");
+                response.setData(authResponse);
+            }
+        }
+        return ResponseEntity.ok(response);
+    }
+
 }

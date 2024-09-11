@@ -2,6 +2,7 @@ package com.datien.lms.controller;
 
 import com.datien.lms.dto.request.AdminRequest;
 import com.datien.lms.dto.response.AdminResponse;
+import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.ManagerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,7 +42,7 @@ public class ManagementController {
             @RequestBody AdminRequest request,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(managerService.createAdmin(request, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(managerService.createAdmin(request, connectedUser)));
     }
 
     @Operation(
@@ -65,7 +66,7 @@ public class ManagementController {
             @PathVariable("admin-id") Long adminId,
             Authentication connectedUser
     ) throws IllegalAccessException {
-        return ResponseEntity.ok(managerService.updateAdminInfo(request, adminId, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(managerService.updateAdminInfo(request, adminId, connectedUser)));
     }
 
     @Operation(
@@ -88,7 +89,7 @@ public class ManagementController {
             @PathVariable("admin-id") Long adminId,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(managerService.deleteAdmin(adminId, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(managerService.deleteAdmin(adminId, connectedUser)));
     }
 
     @Operation(
@@ -108,7 +109,7 @@ public class ManagementController {
             @RequestParam(defaultValue = "10") int size,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(managerService.getAllAdmins(page, size, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(managerService.getAllAdmins(page, size, connectedUser)));
     }
 
     @Operation(
@@ -131,6 +132,6 @@ public class ManagementController {
             @PathVariable("admin-id") Long adminId,
             Authentication connectedUser
     ) {
-       return ResponseEntity.ok(managerService.getAdminDetail(adminId, connectedUser));
+       return ResponseEntity.ok(ResponseData.createResponse(managerService.getAdminDetail(adminId, connectedUser)));
     }
 }

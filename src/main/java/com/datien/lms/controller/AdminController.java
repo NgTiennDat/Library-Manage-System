@@ -3,6 +3,7 @@ package com.datien.lms.controller;
 import com.datien.lms.dto.request.AdminRequest;
 import com.datien.lms.dto.request.StudentRequest;
 import com.datien.lms.dto.response.StudentResponse;
+import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.AdminService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +39,7 @@ public class AdminController {
             @PathVariable("student-id") Long studentId,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(adminService.getStudentById(studentId, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(adminService.getStudentById(studentId, connectedUser)));
     }
 
     @PostMapping
@@ -55,7 +56,7 @@ public class AdminController {
     public ResponseEntity<?> create(
             @RequestBody StudentRequest request, Authentication connectedUser
     ) {
-        return ResponseEntity.ok(adminService.createUser(request, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(adminService.createUser(request, connectedUser)));
     }
 
     @GetMapping("/all")
@@ -73,7 +74,7 @@ public class AdminController {
             @RequestParam(defaultValue = "10") int size,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(adminService.getAllStudent(page, size, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(adminService.getAllStudent(page, size, connectedUser)));
     }
 
     @PutMapping("/{adminId}")
@@ -92,7 +93,7 @@ public class AdminController {
             @PathVariable Long adminId,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(adminService.updateAdminInfo(request, adminId, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(adminService.updateAdminInfo(request, adminId, connectedUser)));
     }
 
     @DeleteMapping("/{student-id}")
@@ -110,7 +111,7 @@ public class AdminController {
             @PathVariable("student-id") Long studentId,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(adminService.deleteStudent(studentId, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(adminService.deleteStudent(studentId, connectedUser)));
     }
 
 }

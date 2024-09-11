@@ -4,6 +4,7 @@ import com.datien.lms.dto.request.UserChangePasswordRequest;
 import com.datien.lms.dto.request.UserForgotPasswordRequest;
 import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.dto.request.UserResetPasswordRequest;
+import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,14 +23,14 @@ public class UserController {
     public ResponseEntity<?> register(
             @RequestBody UserRequest request
     ) {
-        return ResponseEntity.ok(userService.register(request));
+        return ResponseEntity.ok(ResponseData.createResponse(userService.register(request)));
     }
 
     @GetMapping("/activate-account")
     public ResponseEntity<?> activateAccount(
             @RequestParam String activationCode
     ) {
-        return ResponseEntity.ok(userService.activateAccount(activationCode));
+        return ResponseEntity.ok(ResponseData.createResponse(userService.activateAccount(activationCode)));
     }
 
     @PatchMapping("/password/change")
@@ -37,21 +38,21 @@ public class UserController {
             @RequestBody UserChangePasswordRequest request,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(userService.changePassword(request, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(userService.changePassword(request, connectedUser)));
     }
 
     @PostMapping("/password/forgot")
     public ResponseEntity<?> forgotPassword(
             @RequestBody UserForgotPasswordRequest request
     ) {
-        return ResponseEntity.ok(userService.handleForgotPassword(request));
+        return ResponseEntity.ok(ResponseData.createResponse(userService.handleForgotPassword(request)));
     }
 
     @PostMapping("/password/reset")
     public ResponseEntity<?> resetPassword(
             @RequestBody UserResetPasswordRequest request
     ) { 
-        return ResponseEntity.ok(userService.handleResetPassword(request));
+        return ResponseEntity.ok(ResponseData.createResponse(userService.handleResetPassword(request)));
     }
 
 }

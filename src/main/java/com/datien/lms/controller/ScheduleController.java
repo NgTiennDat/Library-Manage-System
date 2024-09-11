@@ -1,6 +1,7 @@
 package com.datien.lms.controller;
 
 import com.datien.lms.dto.request.ScheduleRequest;
+import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class ScheduleController {
             @RequestBody ScheduleRequest request,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(scheduleService.createSchedule(request, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(scheduleService.createSchedule(request, connectedUser)));
     }
 
 }

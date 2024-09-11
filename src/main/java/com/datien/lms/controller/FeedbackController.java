@@ -1,6 +1,7 @@
 package com.datien.lms.controller;
 
 import com.datien.lms.dto.request.FeedbackRequest;
+import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.FeedbackService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class FeedbackController {
             @RequestParam Long bookId,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(feedbackService.createFeedback(request, bookId, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(feedbackService.createFeedback(request, bookId, connectedUser)));
     }
 
     @GetMapping("{book-id}")
@@ -34,7 +35,7 @@ public class FeedbackController {
             @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(feedbackService.getAllFeedbackByBookId(bookId, pageSize, pageNumber, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(feedbackService.getAllFeedbackByBookId(bookId, pageSize, pageNumber, connectedUser)));
     }
 
     @PatchMapping("/update/{feedback-id}")
@@ -43,7 +44,7 @@ public class FeedbackController {
             @PathVariable("feedback-id") Long feedbackId,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(feedbackService.updateDetailedFeedback(feedbackId, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(feedbackService.updateDetailedFeedback(feedbackId, connectedUser)));
     }
 
     @DeleteMapping("{feedback-id}")
@@ -52,6 +53,6 @@ public class FeedbackController {
             @PathVariable("feedback-id") Long feedbackId,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(feedbackService.deleteFeedback(feedbackId, connectedUser));
+        return ResponseEntity.ok(ResponseData.createResponse(feedbackService.deleteFeedback(feedbackId, connectedUser)));
     }
 }

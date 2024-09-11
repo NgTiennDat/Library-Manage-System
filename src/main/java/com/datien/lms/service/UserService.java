@@ -153,9 +153,7 @@ public class UserService {
             var oldActivateCode = otpRepository.findByUserId(user.getId());
 
             if (oldActivateCode.isEmpty()) {
-                result = new Result(ResponseCode.OTP_NOTFOUND.getCode(), false, ResponseCode.OTP_NOTFOUND.getMessage());
-                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
-                return resultExecuted;
+                emailService.sendValidEmail(user);
             }
 
             otpRepository.delete(oldActivateCode.get());

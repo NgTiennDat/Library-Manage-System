@@ -13,8 +13,6 @@ import java.util.Map;
 @AllArgsConstructor
 public class ResponseData<T> {
     @NonNull
-    private String transactionId;
-    @NonNull
     private T result;
     private T data;
 
