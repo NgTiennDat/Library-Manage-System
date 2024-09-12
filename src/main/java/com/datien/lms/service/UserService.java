@@ -180,33 +180,38 @@ public class UserService {
         String notification = "";
 
         try {
-            User user = userRepository.findByEmail(userResetPassword.getEmail())
-                    .orElseThrow(() -> new RuntimeException("No user with email: " + userResetPassword.getEmail()));
+            var user = userRepository.findByEmail(userResetPassword.getEmail());
 
-            var activeCode = otpRepository.findByUserId(user.getId())
+            if(user.isEmpty()) {
+                result = new Result(ResponseCode.USER_NOTFOUND.getCode(), false, ResponseCode.USER_NOTFOUND.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                return resultExecuted;
+            }
+
+            var activeCode = otpRepository.findByUserId(user.get().getId())
                     .orElseThrow(() -> new RuntimeException("No activate code found."));
 
             if (activeCode.getExpiredAt().isBefore(LocalDateTime.now())) {
-                emailService.sendValidEmail(user);
+                emailService.sendValidEmail(user.get());
                 result = new Result(ResponseCode.OTP_EXPIRED.getCode(), false, ResponseCode.OTP_EXPIRED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
 
-            user.setPassword(passwordEncoder.encode(userResetPassword.getNewPassword()));
-            userRepository.save(user);
+            user.get().setPassword(passwordEncoder.encode(userResetPassword.getNewPassword()));
+            userRepository.save(user.get());
             otpRepository.save(activeCode);
             notification = "Successfully Reset password.";
 
         } catch (Exception ex) {
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            notification = "Reset password failed.";
         }
 
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         return resultExecuted;
     }
-
 
     private UserResponse buildUserResponse(String jwtToken, String refreshToken) {
         return UserResponse.builder()

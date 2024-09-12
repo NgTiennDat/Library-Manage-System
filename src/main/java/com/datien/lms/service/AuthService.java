@@ -34,6 +34,7 @@ public class AuthService {
         Result result = Result.OK("00");
         int MAX_LOGIN_FAIL = 3;
         AuthResponse data = new AuthResponse();
+        String notification = "";
 
         try {
             User user = userRepository.findByEmail(request.getEmail())
@@ -53,15 +54,18 @@ public class AuthService {
                         user.setEnabled(false);
                         result = new Result(ResponseCode.ACCOUNT_LOCKED.getCode(), false, ResponseCode.ACCOUNT_LOCKED.getMessage());
                         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                        notification = "Login failed.";
                     } else {
                         result = new Result(ResponseCode.INCORRECT_CURRENT_PASSWORD.getCode(), false, ResponseCode.INCORRECT_CURRENT_PASSWORD.getMessage());
                         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                        notification = "Login failed.";
                     }
                 }
             } else {
                 user.setEnabled(false);
                 result = new Result(ResponseCode.ACCOUNT_LOCKED.getCode(), false, ResponseCode.ACCOUNT_LOCKED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                notification = "Login failed.";
             }
 
             var claims = new HashMap<String, Object>();
@@ -73,14 +77,17 @@ public class AuthService {
             userTokenService.saveUserToken(user, jwtToken);
 
             data.setAccessToken(jwtToken);
-            data.setNotification("Successfully logged in.");
+            notification = "Successfully login.";
+
 
         } catch (Exception ex) {
             result = new Result(ResponseCode.BAD_CREDENTIALS.getCode(), false, ResponseCode.BAD_CREDENTIALS.getMessage());
             resultExecuted.put("result", result);
+            notification = "Login failed.";
         }
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, data);
+        resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         return resultExecuted;
     }
 

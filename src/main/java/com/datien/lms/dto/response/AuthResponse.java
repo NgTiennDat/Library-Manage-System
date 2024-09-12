@@ -13,6 +13,4 @@ public class AuthResponse {
     @JsonProperty("access-token")
     private String accessToken;
 
-    @JsonProperty("notification")
-    private String notification;
 }

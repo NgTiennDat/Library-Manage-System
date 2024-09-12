@@ -41,7 +41,7 @@ public class AuthController {
             Object principal = authentication.getPrincipal();
             if (principal instanceof User) {
                 String token = jwtService.generateToken((User) principal);
-                AuthResponse authResponse = new AuthResponse(token, "Generate token successfully!");
+                AuthResponse authResponse = new AuthResponse(token);
                 response.setData(authResponse);
             }
         }

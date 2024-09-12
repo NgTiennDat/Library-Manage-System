@@ -15,11 +15,13 @@ public class ResponseData<T> {
     @NonNull
     private T result;
     private T data;
+    private T notification;
 
     public static <T> ResponseData<T> createResponse(Map<Object, Object> mapData) {
         ResponseData responseData = new ResponseData();
         responseData.setResult(mapData.getOrDefault(AppConstant.RESPONSE_KEY.RESULT, Result.SYSTEM_ERR()));
         responseData.setData(mapData.getOrDefault(AppConstant.RESPONSE_KEY.DATA, null));
+        responseData.setNotification(mapData.getOrDefault(AppConstant.RESPONSE_KEY.NOTIFICATION, null));
         return responseData;
     }
 }
