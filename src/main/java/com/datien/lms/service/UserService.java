@@ -16,6 +16,8 @@ import com.datien.lms.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final Logger logger = LogManager.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
@@ -36,6 +39,7 @@ public class UserService {
     public Map<Object, Object> register(UserRequest request) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
+        String notification = "";
 
         try {
             var email = userRepository.findByEmail(request.getEmail());
@@ -57,20 +61,24 @@ public class UserService {
             newUser.setEnabled(request.isEnabled());
             newUser.setLoginCount(0);
 
-            if(newUser.getRole() != Role.STUDENT) {
+            if(request.getRole() != Role.STUDENT) {
                 result = new Result(ResponseCode.ROLE_NOT_VALID.getCode(), false, ResponseCode.ROLE_NOT_VALID.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
 
             userRepository.save(newUser);
             emailService.sendValidEmail(newUser);
+            notification = "Register user successfully. Get the OTP from your mail and activate it!";
 
         } catch (Exception ex) {
+            logger.error("Some errors occurs when register a new account.", ex);
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            notification = "Register user failed.";
         }
 
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         return resultExecuted;
     }
 
@@ -97,8 +105,10 @@ public class UserService {
 
 
         } catch (Exception ex) {
+            logger.error("Some errors occurs when activate an account.", ex);
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            notification = "Activate account failed.";
         }
 
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
@@ -131,8 +141,10 @@ public class UserService {
             notification = "Successfully changed password";
 
         } catch (Exception ex) {
+            logger.error("Some errors occurs when change password.", ex);
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            notification = "Change password failed.";
         }
 
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
@@ -161,12 +173,12 @@ public class UserService {
             userRepository.save(user);
             emailService.sendValidEmail(user);
             notification = "Forgot password verified.";
-        } catch (MessagingException ex) {
-            result = new Result(ResponseCode.EMAIL_ERROR.getCode(), false, ResponseCode.EMAIL_ERROR.getMessage());
-            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+
         } catch (Exception ex) {
+            logger.error("Some errors occurs when forgot password.", ex);
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            notification = "Forgot password failed.";
         }
 
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);

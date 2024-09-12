@@ -11,6 +11,9 @@ public class ScheduleRequest {
 
     private Long studentId;
     private Long bookId;
+    private String status;
     private LocalDateTime borrowDate;
     private LocalDateTime dueDate;
+    private String isDelete;
+
 }

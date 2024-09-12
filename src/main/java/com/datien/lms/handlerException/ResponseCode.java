@@ -24,6 +24,7 @@ public enum ResponseCode {
     OTP_NOTFOUND("ERR_310", "OTP not found"),
     USER_NOTFOUND("ERR_311", "User not found"),
     FEEDBACK_NOTFOUND("ERR_312", "Feedback not found"),
+    SCHEDULE_NOTFOUND("ERR_313", "Schedule not found"),
 
     // Resource errors
     RESOURCE_NOT_FOUND("ERR_404", "Resource not found"),

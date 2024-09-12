@@ -1,5 +1,6 @@
 package com.datien.lms.controller;
 
+import com.datien.lms.dao.ScheduleStatus;
 import com.datien.lms.dto.request.ScheduleRequest;
 import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.ScheduleService;
@@ -25,4 +26,39 @@ public class ScheduleController {
         return ResponseEntity.ok(ResponseData.createResponse(scheduleService.createSchedule(request, connectedUser)));
     }
 
+    @GetMapping("/{schedule-id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getScheduleById(
+            @PathVariable("schedule-id") Long id,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(ResponseData.createResponse(scheduleService.getScheduleById(id, connectedUser)));
+    }
+
+    @PutMapping("/update/status/{schedule-id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> updateScheduleStatus(
+            @PathVariable("schedule-id") Long id,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(scheduleService.updateScheduleStatus(id, connectedUser));
+    }
+
+    @PutMapping("/update/{schedule-id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> updateSchedule(
+            @PathVariable("schedule-id") Long id,
+            @RequestBody ScheduleRequest request,
+            Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(ResponseData.createResponse(scheduleService.updateSchedule(id, request, connectedUser)));
+    }
+
+    @DeleteMapping("/delete/{schedule-id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<?> deleteSchedule(
+            @PathVariable("schedule-id") Long id, Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(ResponseData.createResponse(scheduleService.deleteSchedule(id, connectedUser)));
+    }
 }

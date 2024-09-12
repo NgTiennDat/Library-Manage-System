@@ -15,7 +15,7 @@ public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SCHEDULE_ID")
-    private Long scheduleId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "STUDENT_ID", nullable = false)
@@ -38,13 +38,22 @@ public class Schedule {
     @Enumerated(EnumType.STRING)
     private ScheduleStatus status;
 
+    @Column(name = "IS_DELETED")
+    private String isDeleted;
+
     @CreationTimestamp
     @Column(name = "CREATED_DATE", nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
+    @Column(name = "CREATED_BY")
+    private Long createdBy;
+
     @UpdateTimestamp
     @Column(name = "UPDATED_DATE")
     private LocalDateTime updatedDate;
+
+    @Column(name = "UPDATED_BY")
+    private Long updatedBy;
 
 
 }
