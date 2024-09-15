@@ -75,6 +75,7 @@ public class UserService {
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             notification = "Register user failed.";
+            resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         }
 
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);

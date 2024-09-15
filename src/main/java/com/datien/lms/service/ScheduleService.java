@@ -231,6 +231,8 @@ public class ScheduleService {
             }
 
             schedule.setIsDeleted("Y");
+            schedule.setUpdatedDate(LocalDateTime.now());
+            schedule.setUpdatedBy(user.getId());
             scheduleRepository.save(schedule);
             notification = "Delete schedule successfully.";
 

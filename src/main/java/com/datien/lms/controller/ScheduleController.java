@@ -4,6 +4,7 @@ import com.datien.lms.dao.ScheduleStatus;
 import com.datien.lms.dto.request.ScheduleRequest;
 import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.ScheduleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class ScheduleController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createSchedule(
-            @RequestBody ScheduleRequest request,
+            @RequestBody @Valid ScheduleRequest request,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(scheduleService.createSchedule(request, connectedUser)));
@@ -48,7 +49,7 @@ public class ScheduleController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> updateSchedule(
             @PathVariable("schedule-id") Long id,
-            @RequestBody ScheduleRequest request,
+            @RequestBody @Valid ScheduleRequest request,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(scheduleService.updateSchedule(id, request, connectedUser)));

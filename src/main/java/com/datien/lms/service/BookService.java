@@ -72,6 +72,7 @@ public class BookService {
     public Map<Object, Object> createBook(BookRequest bookRequest, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result;
+        String notification = "";
 
         try {
             var user1 = userRepository.findByEmail(connectedUser.getName());
@@ -108,13 +109,19 @@ public class BookService {
             book.setLastModifiedBy(user1.get().getUsername());
 
             bookRepository.save(book);
+            notification = "Successfully added book.";
 
             result = new Result(ResponseCode.SYSTEM.getCode(), true, ResponseCode.SYSTEM.getMessage());
         } catch (Exception ex) {
+            logger.error("Some errors occurs when adding a book.", ex);
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
+            resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            notification = "Add book failed.";
+            resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         }
 
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         return resultExecuted;
     }
 
@@ -133,6 +140,7 @@ public class BookService {
 
             resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, bookResponsesPage);
         } catch (Exception ex) {
+            logger.error("Some errors occurs when retrieving all books.", ex);
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         }
@@ -152,6 +160,7 @@ public class BookService {
 
             resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, savedBook);
         } catch (Exception ex) {
+            logger.error("Some errors occurs when retrieving book.", ex);
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         }
