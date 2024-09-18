@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class ScheduleController {
     }
 
     @GetMapping("/{schedule-id}")
+    @PreAuthorize("hasAuthority('admin::read')")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getScheduleById(
             @PathVariable("schedule-id") Long id,
@@ -56,6 +58,7 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/delete/{schedule-id}")
+    @PreAuthorize("hasAuthority('admin::delete')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> deleteSchedule(
             @PathVariable("schedule-id") Long id, Authentication connectedUser
