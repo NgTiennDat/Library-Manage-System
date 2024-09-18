@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +60,8 @@ public class ScheduleService {
             }
 
             Schedule schedule = new Schedule();
+            String scheduleId = UUID.randomUUID().toString();
+            schedule.setId(scheduleId);
             schedule.setStudent(optionalStudent.get());
             schedule.setBook(optionalBook.get());
             schedule.setBorrowDate(request.getBorrowDate());

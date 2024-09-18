@@ -81,10 +81,10 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> deleteBook(
             @PathVariable("book-id") String bookId,
-            @RequestParam("hardDelete") boolean hardDelete,
+            @RequestParam("isDeleted") String isDeleted,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(ResponseData.createResponse(bookService.deleteBook(bookId, hardDelete, connectedUser)));
+        return ResponseEntity.ok(ResponseData.createResponse(bookService.deleteBook(bookId, isDeleted, connectedUser)));
     }
 
     @PostMapping(value = "/cover/{book-id}", consumes = "multipart/form-data")

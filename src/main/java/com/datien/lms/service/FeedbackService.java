@@ -51,6 +51,8 @@ public class FeedbackService {
                     .orElseThrow(() -> new EntityNotFoundException("No book exist with the Id: " + bookId));
 
             var newFeedback = new Feedback();
+            String feedbackId = UUID.randomUUID().toString();
+            newFeedback.setId(feedbackId);
             newFeedback.setNote(request.getNote());
             newFeedback.setDescription(request.getDescription());
             newFeedback.setBook(book);

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.datien.lms.dao.Role.STUDENT;
 
@@ -44,7 +45,7 @@ public class AdminService {
                 result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
-            var student = studentRepository.findById(studentId).orElseThrow(EntityNotFoundException::new);
+            var student = studentRepository.findById(studentId).orElseThrow(() -> new EntityNotFoundException("No student found with Id" + studentId));
             var responseStudent = this.toStudentResponse(student);
 
             resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, responseStudent);
@@ -62,19 +63,21 @@ public class AdminService {
 
         String notification = "";
         try {
-            var student = new Admin();
+            var student = new Student();
 
             User user = (User) connectedUser.getPrincipal();
             if (user.getRole() == STUDENT) {
                 result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
-
+            String userId = UUID.randomUUID().toString();
+            student.setId(userId);
             student.setFirstname(request.getFirstname());
             student.setLastname(request.getLastname());
             student.setEmail(request.getEmail());
             student.setPassword(passwordEncoder.encode(request.getPassword()));
             student.setPhone(request.getPhone());
+            student.setIsDeleted("N");
             student.setLoginCount(0);
             student.setSex(request.getSex());
             student.setEnabled(request.isEnabled());
@@ -85,7 +88,7 @@ public class AdminService {
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
 
-            adminRepository.save(student);
+            studentRepository.save(student);
 
             notification = "Create user successfully";
         } catch (Exception ex) {
@@ -121,6 +124,7 @@ public class AdminService {
                 admin.setPassword(passwordEncoder.encode(request.getPassword()));
                 admin.setRole(Role.ADMIN);
                 admin.setLoginCount(0);
+                admin.setIsDeleted(request.getIsDeleted());
                 admin.setSex(request.getSex());
                 admin.setPhone(request.getPhone());
                 admin.setEnabled(request.isEnabled());

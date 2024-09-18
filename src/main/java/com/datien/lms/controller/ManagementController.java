@@ -87,9 +87,10 @@ public class ManagementController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> deleteAdmin(
             @PathVariable("admin-id") String adminId,
+            @RequestParam(name = "isDeleted", defaultValue = "") String isDeleted,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(ResponseData.createResponse(managerService.deleteAdmin(adminId, connectedUser)));
+        return ResponseEntity.ok(ResponseData.createResponse(managerService.deleteAdmin(adminId, isDeleted, connectedUser)));
     }
 
     @Operation(

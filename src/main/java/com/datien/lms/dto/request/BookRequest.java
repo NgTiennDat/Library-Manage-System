@@ -32,6 +32,9 @@ public class BookRequest {
     @NotBlank(message = "Genre is mandatory.")
     private String genre;
 
+    @NotBlank(message = "IsDelete is mandatory")
+    private String isDelete;
+
     @NotNull(message = "Availability status is mandatory.")
     private boolean available;
 

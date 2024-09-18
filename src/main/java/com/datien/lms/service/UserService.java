@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -51,12 +52,15 @@ public class UserService {
             }
 
             User newUser = new User();
+            String userId = UUID.randomUUID().toString();
+            newUser.setId(userId);
             newUser.setFirstname(request.getFirstname());
             newUser.setLastname(request.getLastname());
             newUser.setEmail(request.getEmail());
             newUser.setPassword(passwordEncoder.encode(request.getPassword()));
             newUser.setSex(request.getSex());
             newUser.setPhone(request.getPhone());
+            newUser.setIsDeleted("N");
             newUser.setRole(request.getRole());
             newUser.setEnabled(request.isEnabled());
             newUser.setLoginCount(0);

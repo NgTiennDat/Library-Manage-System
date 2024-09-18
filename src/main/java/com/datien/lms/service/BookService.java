@@ -26,10 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,7 +91,9 @@ public class BookService {
                 return resultExecuted;
             }
 
+            String bookId = UUID.randomUUID().toString();
             var book = new Book();
+            book.setId(bookId);
             book.setTitle(bookRequest.getTitle());
             book.setAuthor(bookRequest.getAuthor());
             book.setPublisher(bookRequest.getPublisher());
@@ -170,19 +169,12 @@ public class BookService {
 
     }
 
-//    public BookResponse getDetailBook(Long bookId) {
-//        var book = bookRepository.findById(bookId)
-//                .orElseThrow(() -> new EntityNotFoundException("No book found with the Id " + bookId));
-//        return bookMapper.toBookResponse(book);
-//    }
-
-    public Map<Object, Object> deleteBook(String bookId, boolean hardDelete, Authentication connectedUser) {
+    public Map<Object, Object> deleteBook(String bookId, String isDeleted, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
         String notification = "";
 
         try {
-
             User user = (User) connectedUser.getPrincipal();
 
             if(user.getRole() == Role.STUDENT) {
@@ -191,12 +183,10 @@ public class BookService {
             }
 
             var book = bookRepository.findById(bookId).orElseThrow(() -> new EntityNotFoundException("No book found with Id: " + bookId));
-            if(!hardDelete) {
-                book.setArchived(true);
-            } else {
-                bookRepository.deleteById(bookId);
 
-            }
+            book.setIsDeleted(isDeleted);
+            bookRepository.save(book);
+
             notification = "Successfully delete book.";
         } catch (Exception ex) {
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());

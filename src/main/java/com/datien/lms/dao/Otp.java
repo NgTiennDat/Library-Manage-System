@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Builder
 @Setter
@@ -14,7 +15,6 @@ import java.time.LocalDateTime;
 @Table(name = "user_otp")
 public class Otp {
     @Id
-    @Column(name = "OTP_ID")
     private String id;
 
     private String code;
@@ -30,4 +30,10 @@ public class Otp {
     @JoinColumn(name = "userId")
     private User user;
 
+    @PrePersist
+    public void prePersist() {
+        if (this.id == null) {
+            this.id = UUID.randomUUID().toString();
+        }
+    }
 }
