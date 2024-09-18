@@ -33,9 +33,6 @@ public class User implements UserDetails {
     @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "DATE_OF_BIRTH")
-    private String dateOfBirth;
-
     @Column(name = "PHONE_NUMBER")
     private String phone;
 

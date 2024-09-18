@@ -15,9 +15,6 @@ import lombok.*;
 @Builder
 public class UserRequest {
 
-    @NotBlank(message = "User id is mandatory")
-    private String userId;
-
     @NotBlank(message = "firstname is mandatory.")
     private String firstname;
 
@@ -32,8 +29,8 @@ public class UserRequest {
     @Size(min = 8, message = "password has at least 8 characters.")
     private String password;
 
-    @NotBlank(message = "date of birth is mandatory")
-    private String dateOfBirth;
+    @NotBlank(message = "Is deleted is mandatory.")
+    private String isDeleted;
 
     @NotBlank(message = "phone is mandatory.")
     @Size(min = 10, message = "password has at least 10 characters.")
@@ -44,6 +41,7 @@ public class UserRequest {
 
     @NotNull(message = "sex is mandatory.")
     private SEX sex;
+
     private boolean enabled;
 
     @NotNull(message = "sex is mandatory.")

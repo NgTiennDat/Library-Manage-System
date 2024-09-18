@@ -1,14 +1,12 @@
 package com.datien.lms.controller;
 
-import com.datien.lms.dto.request.AdminRequest;
-import com.datien.lms.dto.response.AdminResponse;
+import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.ManagerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -39,7 +37,7 @@ public class ManagementController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createAdmin(
-            @RequestBody AdminRequest request,
+            @RequestBody UserRequest request,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(managerService.createAdmin(request, connectedUser)));
@@ -62,10 +60,10 @@ public class ManagementController {
     @PutMapping("/update/{admin-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> updateAdmin(
-            @RequestBody AdminRequest request,
+            @RequestBody UserRequest request,
             @PathVariable("admin-id") String adminId,
             Authentication connectedUser
-    ) throws IllegalAccessException {
+    ) {
         return ResponseEntity.ok(ResponseData.createResponse(managerService.updateAdminInfo(request, adminId, connectedUser)));
     }
 

@@ -5,7 +5,7 @@ import com.datien.lms.common.Result;
 import com.datien.lms.dao.Admin;
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
-import com.datien.lms.dto.request.AdminRequest;
+import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.dto.response.AdminResponse;
 import com.datien.lms.handlerException.ResponseCode;
 import com.datien.lms.repository.AdminRepository;
@@ -32,7 +32,7 @@ public class ManagerService {
     private final PasswordEncoder passwordEncoder;
     private final AdminMapper adminMapper;
 
-    public Map<Object, Object> createAdmin(AdminRequest request, Authentication connectedUser) {
+    public Map<Object, Object> createAdmin(UserRequest request, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
 
@@ -68,7 +68,7 @@ public class ManagerService {
     }
 
 
-    public Map<Object, Object> updateAdminInfo(AdminRequest request, String adminId, Authentication connectedUser) throws IllegalAccessException {
+    public Map<Object, Object> updateAdminInfo(UserRequest request, String adminId, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
 

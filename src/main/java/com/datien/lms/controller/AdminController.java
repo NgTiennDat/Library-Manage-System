@@ -1,22 +1,16 @@
 package com.datien.lms.controller;
 
-import com.datien.lms.dto.request.AdminRequest;
-import com.datien.lms.dto.request.StudentRequest;
-import com.datien.lms.dto.response.StudentResponse;
+import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.AdminService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.nio.file.AccessDeniedException;
 
 @RestController
 @PreAuthorize("hasRole('ADMIN')")
@@ -54,7 +48,7 @@ public class AdminController {
             }
     )
     public ResponseEntity<?> create(
-            @RequestBody StudentRequest request, Authentication connectedUser
+            @RequestBody UserRequest request, Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(adminService.createUser(request, connectedUser)));
     }
@@ -89,7 +83,7 @@ public class AdminController {
             }
     )
     public ResponseEntity<?> update(
-            @RequestBody AdminRequest request,
+            @RequestBody UserRequest request,
             @PathVariable("adminId") String adminId,
             Authentication connectedUser
     ) {

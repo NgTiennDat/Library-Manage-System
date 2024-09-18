@@ -1,6 +1,7 @@
 package com.datien.lms;
 
 import com.datien.lms.dao.SEX;
+import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.service.UserService;
 import org.springframework.boot.CommandLineRunner;
@@ -29,32 +30,32 @@ public class LmsApplication {
             UserService service
     ) {
         return args -> {
-            var admin = UserRequest.builder()
-                    .userId(UUID.randomUUID().toString()) // Set UUID cho admin
-                    .firstname("Admin")
-                    .lastname("Admin")
-                    .email("admin@mail.com")
-                    .password("password1")
-                    .role(ADMIN)
-                    .loginCount(0)
-                    .sex(SEX.MALE)
-                    .phone("12429238231")
-                    .enabled(true)
-                    .build();
+            var admin = new UserRequest();
+            admin.setFirstname("Admin");
+            admin.setLastname("Admin");
+            admin.setEmail("admin@mail.com");
+            admin.setPassword("password1");
+            admin.setRole(ADMIN);
+            admin.setLoginCount(0);
+            admin.setSex(SEX.MALE);
+            admin.setIsDeleted("N");
+            admin.setPhone("12429238231");
+            admin.setEnabled(true);
+
             service.register(admin);
 
-            var manager = UserRequest.builder()
-                    .userId(UUID.randomUUID().toString()) // Set UUID cho manager
-                    .firstname("Manager")
-                    .lastname("Manager")
-                    .email("manager@mail.com")
-                    .password("password2")
-                    .role(MANAGER)
-                    .loginCount(0)
-                    .sex(SEX.FEMALE)
-                    .enabled(true)
-                    .phone("12429238231")
-                    .build();
+            var manager = new UserRequest();
+            manager.setFirstname("Manager");
+            manager.setLastname("Manager");
+            manager.setEmail("manager@mail.com");
+            manager.setPassword("password2");
+            manager.setRole(MANAGER);
+            manager.setLoginCount(0);
+            manager.setIsDeleted("N");
+            manager.setSex(SEX.FEMALE);
+            manager.setPhone("12429238231");
+            manager.setEnabled(true);
+
             service.register(manager);
         };
     }

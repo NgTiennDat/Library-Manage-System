@@ -2,12 +2,10 @@ package com.datien.lms.service;
 
 import com.datien.lms.common.AppConstant;
 import com.datien.lms.common.Result;
-import com.datien.lms.dao.Admin;
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.Student;
 import com.datien.lms.dao.User;
-import com.datien.lms.dto.request.AdminRequest;
-import com.datien.lms.dto.request.StudentRequest;
+import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.dto.response.StudentResponse;
 import com.datien.lms.handlerException.ResponseCode;
 import com.datien.lms.repository.AdminRepository;
@@ -57,7 +55,7 @@ public class AdminService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> createUser(StudentRequest request, Authentication connectedUser) {
+    public Map<Object, Object> createUser(UserRequest request, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
 
@@ -101,7 +99,7 @@ public class AdminService {
     }
 
     public Map<Object, Object> updateAdminInfo(
-            AdminRequest request,
+            UserRequest request,
             String adminId,
             Authentication connectedUser
     ) {
