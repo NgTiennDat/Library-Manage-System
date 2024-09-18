@@ -21,7 +21,7 @@ public class FeedbackController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> createFeedback(
             @RequestBody @Valid FeedbackRequest request,
-            @RequestParam Long bookId,
+            @RequestParam(name = "bookId", defaultValue = "") Long bookId,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(feedbackService.createFeedback(request, bookId, connectedUser)));

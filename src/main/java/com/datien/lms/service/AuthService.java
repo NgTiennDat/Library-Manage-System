@@ -10,6 +10,8 @@ import com.datien.lms.repository.UserRepository;
 import com.datien.lms.utils.JwtService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RBucket;
+import org.redisson.api.RedissonClient;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,12 +29,15 @@ public class AuthService {
     private final AuthenticationManager authManager;
     private final JwtService jwtService;
     private final UserTokenService userTokenService;
+    private final RedissonClient redissonClient;
+
+    private final String LOGIN_ATTEMPTS_KEY_PREFIX = "login_attempts:";
+    private final int MAX_LOGIN_FAIL = 3;
 
 
     public Map<Object, Object> doLogin(AuthRequest request) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("00");
-        int MAX_LOGIN_FAIL = 3;
         AuthResponse data = new AuthResponse();
         String notification = "";
 
@@ -95,5 +100,82 @@ public class AuthService {
         int loginCount = user.getLoginCount() + 1;
         user.setLoginCount(loginCount);
         userRepository.save(user);
+    }
+
+    public Map<Object, Object> doLogin1(AuthRequest request) {
+        Map<Object, Object> resultExecuted = new HashMap<>();
+        Result result = Result.OK("00");
+        AuthResponse data = new AuthResponse();
+        String notification = "";
+
+        try {
+            User user = userRepository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new EntityNotFoundException("No user found with the email: " + request.getEmail()));
+
+            // Redis key for login attempts
+            String loginAttemptsKey = LOGIN_ATTEMPTS_KEY_PREFIX + request.getEmail();
+            RBucket<Integer> loginAttemptsBucket = redissonClient.getBucket(loginAttemptsKey);
+
+            // Check current login attempts
+            Integer loginAttempts = loginAttemptsBucket.get();
+            if (loginAttempts == null) {
+                loginAttempts = 0;
+            }
+
+            // Authenticate the user
+            var auth = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(), request.getPassword()
+                    )
+            );
+
+            if (loginAttempts < MAX_LOGIN_FAIL) {
+                boolean isMatched = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+                if (!isMatched) {
+                    loginAttempts++;
+                    loginAttemptsBucket.set(loginAttempts);
+
+                    if (loginAttempts >= MAX_LOGIN_FAIL) {
+                        user.setEnabled(false);
+                        result = new Result(ResponseCode.ACCOUNT_LOCKED.getCode(), false, ResponseCode.ACCOUNT_LOCKED.getMessage());
+                        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                        notification = "Login failed.";
+                    } else {
+                        result = new Result(ResponseCode.INCORRECT_CURRENT_PASSWORD.getCode(), false, ResponseCode.INCORRECT_CURRENT_PASSWORD.getMessage());
+                        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                        notification = "Login failed.";
+                    }
+                } else {
+                    // Reset login attempts after successful login
+                    loginAttemptsBucket.delete();
+
+                    var claims = new HashMap<String, Object>();
+                    claims.put("user", user.getFullName());
+
+                    String jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
+
+                    userTokenService.revokeAllUserTokens(user);
+                    userTokenService.saveUserToken(user, jwtToken);
+
+                    data.setAccessToken(jwtToken);
+                    notification = "Successfully login.";
+                }
+            } else {
+                user.setEnabled(false);
+                result = new Result(ResponseCode.ACCOUNT_LOCKED.getCode(), false, ResponseCode.ACCOUNT_LOCKED.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                notification = "Login failed.";
+            }
+
+        } catch (Exception ex) {
+            result = new Result(ResponseCode.BAD_CREDENTIALS.getCode(), false, ResponseCode.BAD_CREDENTIALS.getMessage());
+            resultExecuted.put("result", result);
+            notification = "Login failed.";
+        }
+        resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, data);
+        resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
+        return resultExecuted;
     }
 }

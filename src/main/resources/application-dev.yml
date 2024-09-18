@@ -1,3 +1,11 @@
+redis:
+  redisson:
+    mode: SINGLE
+    address-single: redis://127.0.0.1:6379
+    connection-pool-size: 10
+    connection-minimum-idle-size: 5
+    connect-timeout: 30000
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/lms
@@ -6,7 +14,6 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-
       ddl-auto: update
     show-sql: false
     properties:

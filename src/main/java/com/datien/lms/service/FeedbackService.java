@@ -15,6 +15,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,7 @@ public class FeedbackService {
 
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = new Result();
+        String notification = "";
 
         try {
             User user = (User) connectedUser.getPrincipal();
@@ -53,25 +57,28 @@ public class FeedbackService {
             newFeedback.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
             newFeedback.setIsDeleted(AppConstant.STATUS.IS_UN_DELETED);
             newFeedback.setCreatedBy(user.getId());
-
             feedbackRepository.save(newFeedback);
 
+            notification = "Add feedback successfully.";
         } catch (Exception e) {
             logger.error("Some errors occurred while creating the feedback", e);
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            notification = "Add feedback failed.";
+            resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         }
 
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         return resultExecuted;
     }
 
     public Map<Object, Object> getAllFeedbackByBookId(Long bookId, int pageSize, int pageNumber, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = new Result();
+        String notification = "";
 
         FeedbackResponse feedbackResponse = new FeedbackResponse();
-        List<FeedbackDto> feedbackDtos = new ArrayList<>();
 
         try {
             var book = bookRepository.findById(bookId);
@@ -86,11 +93,15 @@ public class FeedbackService {
             if(user.getRole() == Role.STUDENT) {
                 result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                notification = "You don't have permission to access.";
+                resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
+                return resultExecuted;
             }
 
-            List<Feedback> feedbacks = feedbackRepository.findAllByBookId(bookId);
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            Page<Feedback> feedbackPage = feedbackRepository.findAllByBookId(bookId, pageable);
 
-            feedbackDtos = feedbacks.stream()
+            List<FeedbackDto> feedbackDtos = feedbackPage.getContent().stream()
                     .map(feedback -> {
                         FeedbackDto feedbackDto = new FeedbackDto();
                         feedbackDto.setNote(feedback.getNote());
@@ -100,24 +111,23 @@ public class FeedbackService {
                         return feedbackDto;
                     }).toList();
 
-            List<FeedbackDto> paginatedList = feedbackDtos.stream()
-                    .skip((long) pageSize * pageNumber)
-                    .limit(pageSize)
-                    .toList();
-
-            feedbackResponse.setFeedbackDtos(paginatedList);
-            feedbackResponse.setTotalRecords(feedbackDtos.size());
+            feedbackResponse.setFeedbackDtos(feedbackDtos);
+            feedbackResponse.setTotalRecords((int) feedbackPage.getTotalElements());
+            notification = "Get feedback of the book successfully.";
 
         } catch (Exception ex) {
             logger.error("Some errors occurred while getting the feedback", ex);
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+            notification = "Get feedback of the book failed.";
         }
 
-        resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, feedbackResponse);
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+        resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, feedbackResponse);
+        resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         return resultExecuted;
     }
+
 
     public Map<Object, Object> updateDetailedFeedback(Long feedbackId, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
