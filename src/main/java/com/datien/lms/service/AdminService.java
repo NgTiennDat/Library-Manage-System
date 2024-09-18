@@ -34,7 +34,7 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
     private final StudentRepository studentRepository;
 
-    public Map<Object, Object> getStudentById(Long studentId, Authentication authentication) {
+    public Map<Object, Object> getStudentById(String studentId, Authentication authentication) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
 
@@ -99,7 +99,7 @@ public class AdminService {
 
     public Map<Object, Object> updateAdminInfo(
             AdminRequest request,
-            Long adminId,
+            String adminId,
             Authentication connectedUser
     ) {
         Map<Object, Object> resultExecuted = new HashMap<>();
@@ -142,7 +142,7 @@ public class AdminService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> deleteStudent(Long studentId, Authentication connectedUser) {
+    public Map<Object, Object> deleteStudent(String studentId, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
 

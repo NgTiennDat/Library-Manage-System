@@ -24,7 +24,7 @@ public class BorrowBookService {
     private final Logger logger = LogManager.getLogger(BorrowBookService.class);
     private final BookRepository bookRepository;
 
-    public Map<Object, Object> borrowBook(Long bookId, Authentication connectedUser) {
+    public Map<Object, Object> borrowBook(String bookId, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
         String notification = "";
@@ -48,7 +48,7 @@ public class BorrowBookService {
             bookRepository.save(book);
             notification = "Successfully borrowed book with the Id " + bookId;
 
-            resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, book.getId().intValue());
+            resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, book.getId());
         } catch (Exception ex) {
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ex.getMessage());
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
@@ -59,7 +59,7 @@ public class BorrowBookService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> returnBook(Long bookId, Authentication connectedUser) {
+    public Map<Object, Object> returnBook(String bookId, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
 
@@ -85,7 +85,7 @@ public class BorrowBookService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> returnApproveBook(Long bookId, Authentication connectedUser) {
+    public Map<Object, Object> returnApproveBook(String bookId, Authentication connectedUser) {
         Map<Object, Object> resultExecute = new HashMap<>();
         Result result = new Result();
 

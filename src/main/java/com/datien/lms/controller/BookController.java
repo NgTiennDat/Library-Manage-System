@@ -50,7 +50,7 @@ public class BookController {
     @GetMapping("/{book-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> getBook(
-            @PathVariable("book-id") Long bookId
+            @PathVariable("book-id") String bookId
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(bookService.getDetailBook(bookId)));
     }
@@ -80,7 +80,7 @@ public class BookController {
     @DeleteMapping("/{book-id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> deleteBook(
-            @PathVariable("book-id") Long bookId,
+            @PathVariable("book-id") String bookId,
             @RequestParam("hardDelete") boolean hardDelete,
             Authentication connectedUser
     ) {
@@ -89,7 +89,7 @@ public class BookController {
 
     @PostMapping(value = "/cover/{book-id}", consumes = "multipart/form-data")
     public ResponseEntity<?> uploadBookCoverPicture(
-            @PathVariable("book-id") Long bookId,
+            @PathVariable("book-id") String bookId,
             @Parameter()
             @RequestPart("file") MultipartFile file,
             Authentication connectedUser

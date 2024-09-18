@@ -15,6 +15,9 @@ import lombok.*;
 @Builder
 public class UserRequest {
 
+    @NotBlank(message = "User id is mandatory")
+    private String userId;
+
     @NotBlank(message = "firstname is mandatory.")
     private String firstname;
 

@@ -63,7 +63,7 @@ public class ManagementController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> updateAdmin(
             @RequestBody AdminRequest request,
-            @PathVariable("admin-id") Long adminId,
+            @PathVariable("admin-id") String adminId,
             Authentication connectedUser
     ) throws IllegalAccessException {
         return ResponseEntity.ok(ResponseData.createResponse(managerService.updateAdminInfo(request, adminId, connectedUser)));
@@ -86,7 +86,7 @@ public class ManagementController {
     @DeleteMapping("/delete/{admin-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> deleteAdmin(
-            @PathVariable("admin-id") Long adminId,
+            @PathVariable("admin-id") String adminId,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(managerService.deleteAdmin(adminId, connectedUser)));
@@ -129,7 +129,7 @@ public class ManagementController {
     @GetMapping("/detail/{admin-id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getAdminDetail(
-            @PathVariable("admin-id") Long adminId,
+            @PathVariable("admin-id") String adminId,
             Authentication connectedUser
     ) {
        return ResponseEntity.ok(ResponseData.createResponse(managerService.getAdminDetail(adminId, connectedUser)));

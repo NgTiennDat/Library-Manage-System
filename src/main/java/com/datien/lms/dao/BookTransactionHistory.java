@@ -15,11 +15,10 @@ import java.time.LocalDateTime;
 public class BookTransactionHistory {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    private String id;
 
     @JoinColumn(name = "USER_ID")
-    private Long userId;
+    private String userId;
 
     @ManyToOne
     @JoinColumn(name = "BOOK_ID")

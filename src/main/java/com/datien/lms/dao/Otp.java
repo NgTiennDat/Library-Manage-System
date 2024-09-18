@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @Table(name = "user_otp")
 public class Otp {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "OTP_ID")
+    private String id;
 
     private String code;
     private LocalDateTime createdAt;

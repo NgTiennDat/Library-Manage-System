@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
+import java.util.UUID;
+
 import static com.datien.lms.dao.Role.ADMIN;
 import static com.datien.lms.dao.Role.MANAGER;
 
@@ -21,36 +23,40 @@ public class LmsApplication {
     public static void main(String[] args) {
         SpringApplication.run(LmsApplication.class, args);
     }
-//
-//    @Bean
-//    public CommandLineRunner runner(
-//            UserService service
-//    ) {
-//        return args -> {
-//            var admin = UserRequest.builder()
-//                    .firstname("Admin")
-//                    .lastname("Admin")
-//                    .email("admin@mail.com")
-//                    .password("password1")
-//                    .role(ADMIN)
-//                    .loginCount(0)
-//                    .sex(SEX.MALE)
-//                    .phone("12429238231")
-//                    .enabled(true)
-//                    .build();
-//            service.register(admin);
-//            var manager = UserRequest.builder()
-//                    .firstname("Manager")
-//                    .lastname("Manager")
-//                    .email("manager@mail.com")
-//                    .password("password2")
-//                    .role(MANAGER)
-//                    .loginCount(0)
-//                    .sex(SEX.FEMALE)
-//                    .enabled(true)
-//                    .phone("12429238231")
-//                    .build();
-//            service.register(manager);
-//        };
-//    }
+
+    @Bean
+    public CommandLineRunner runner(
+            UserService service
+    ) {
+        return args -> {
+            var admin = UserRequest.builder()
+                    .userId(UUID.randomUUID().toString()) // Set UUID cho admin
+                    .firstname("Admin")
+                    .lastname("Admin")
+                    .email("admin@mail.com")
+                    .password("password1")
+                    .role(ADMIN)
+                    .loginCount(0)
+                    .sex(SEX.MALE)
+                    .phone("12429238231")
+                    .enabled(true)
+                    .build();
+            service.register(admin);
+
+            var manager = UserRequest.builder()
+                    .userId(UUID.randomUUID().toString()) // Set UUID cho manager
+                    .firstname("Manager")
+                    .lastname("Manager")
+                    .email("manager@mail.com")
+                    .password("password2")
+                    .role(MANAGER)
+                    .loginCount(0)
+                    .sex(SEX.FEMALE)
+                    .enabled(true)
+                    .phone("12429238231")
+                    .build();
+            service.register(manager);
+        };
+    }
+
 }

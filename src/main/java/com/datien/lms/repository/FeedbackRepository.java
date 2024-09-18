@@ -9,13 +9,13 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
+public interface FeedbackRepository extends JpaRepository<Feedback, String> {
 
     @Query("""
        SELECT fb
        FROM Feedback fb
        WHERE fb.book.id = :bookId
        """)
-    Page<Feedback> findAllByBookId(@Param("bookId") Long bookId, Pageable pageable);
+    Page<Feedback> findAllByBookId(@Param("bookId") String bookId, Pageable pageable);
 
 }

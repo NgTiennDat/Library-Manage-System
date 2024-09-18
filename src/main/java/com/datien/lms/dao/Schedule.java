@@ -13,9 +13,8 @@ import java.time.LocalDateTime;
 public class Schedule {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SCHEDULE_ID")
-    private Long id;
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "STUDENT_ID", nullable = false)
@@ -46,14 +45,14 @@ public class Schedule {
     private LocalDateTime createdDate;
 
     @Column(name = "CREATED_BY")
-    private Long createdBy;
+    private String createdBy;
 
     @UpdateTimestamp
     @Column(name = "UPDATED_DATE")
     private LocalDateTime updatedDate;
 
     @Column(name = "UPDATED_BY")
-    private Long updatedBy;
+    private String updatedBy;
 
 
 }

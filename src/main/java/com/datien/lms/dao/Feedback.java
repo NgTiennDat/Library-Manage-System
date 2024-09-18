@@ -16,9 +16,8 @@ import java.sql.Timestamp;
 public class Feedback {
 
     @Id
-    @GeneratedValue
     @Column(name = "FEEDBACK_ID")
-    private Long id;
+    private String id;
 
     @Column(name = "FEEDBACK_NOTE")
     private Double note;
@@ -38,6 +37,6 @@ public class Feedback {
     private Timestamp createdAt;
 
     @Column(name = "CREATED_BY")
-    private Long createdBy;
+    private String createdBy;
 
 }

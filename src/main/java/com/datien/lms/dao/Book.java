@@ -14,9 +14,8 @@ import java.util.List;
 @Table(name = "tbl_book")
 public class Book {
     @Id
-    @GeneratedValue
     @Column(name = "ID")
-    private Long id;
+    private String id;
 
     @Column(name = "TITLE")
     private String title;
@@ -60,7 +59,7 @@ public class Book {
     private LocalDateTime lastModifiedAt;
 
     @Column(name = "CREATED_BY")
-    private Long createdBy;
+    private String createdBy;
 
     @Column(name = "MODIFIED_BY")
     private String lastModifiedBy;

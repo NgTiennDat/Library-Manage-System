@@ -32,7 +32,7 @@ public class ScheduleController {
     @PreAuthorize("hasAuthority('admin::read')")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getScheduleById(
-            @PathVariable("schedule-id") Long id,
+            @PathVariable("schedule-id") String id,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(scheduleService.getScheduleById(id, connectedUser)));
@@ -41,7 +41,7 @@ public class ScheduleController {
     @PutMapping("/update/status/{schedule-id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> updateScheduleStatus(
-            @PathVariable("schedule-id") Long id,
+            @PathVariable("schedule-id") String id,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(scheduleService.updateScheduleStatus(id, connectedUser));
@@ -50,7 +50,7 @@ public class ScheduleController {
     @PutMapping("/update/{schedule-id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> updateSchedule(
-            @PathVariable("schedule-id") Long id,
+            @PathVariable("schedule-id") String id,
             @RequestBody @Valid ScheduleRequest request,
             Authentication connectedUser
     ) {
@@ -61,7 +61,7 @@ public class ScheduleController {
     @PreAuthorize("hasAuthority('admin::delete')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> deleteSchedule(
-            @PathVariable("schedule-id") Long id, Authentication connectedUser
+            @PathVariable("schedule-id") String id, Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(scheduleService.deleteSchedule(id, connectedUser)));
     }

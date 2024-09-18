@@ -79,7 +79,7 @@ public class ScheduleService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> getScheduleById(Long id, Authentication connectedUser) {
+    public Map<Object, Object> getScheduleById(String id, Authentication connectedUser) {
 
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
@@ -113,7 +113,7 @@ public class ScheduleService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> updateScheduleStatus(Long id, Authentication connectedUser) {
+    public Map<Object, Object> updateScheduleStatus(String id, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
         String notification = "";
@@ -171,7 +171,7 @@ public class ScheduleService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> updateSchedule(Long id, ScheduleRequest request, Authentication connectedUser) {
+    public Map<Object, Object> updateSchedule(String id, ScheduleRequest request, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
         String notification = "";
@@ -211,7 +211,7 @@ public class ScheduleService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> deleteSchedule(Long id, Authentication connectedUser) {
+    public Map<Object, Object> deleteSchedule(String id, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
         String notification = "";

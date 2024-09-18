@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 public class ScheduleRequest {
 
     @NotBlank(message = "Student id is mandatory.")
-    private Long studentId;
+    private String studentId;
     @NotBlank(message = "Book id is mandatory.")
-    private Long bookId;
+    private String bookId;
     @NotBlank(message = "Status is mandatory.")
     private String status;
     @NotBlank(message = "Borrow date is mandatory.")

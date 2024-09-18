@@ -23,7 +23,7 @@ public class BookMapper {
 
     public BorrowBookResponse toBorrowBookResponse1(Book book) {
         var borrowBookResponse = new BorrowBookResponse();
-        borrowBookResponse.setId(book.getId().intValue());
+        borrowBookResponse.setId(book.getId());
         borrowBookResponse.setTitle(book.getTitle());
         borrowBookResponse.setAuthor(book.getAuthor());
         borrowBookResponse.setPublisher(book.getPublisher());
@@ -37,7 +37,7 @@ public class BookMapper {
         var borrowBookResponse = new BorrowBookResponse();
         Book book = history.getBook(); // Lấy đối tượng Book từ BookTransactionHistory
 
-        borrowBookResponse.setId(book.getId().intValue());
+        borrowBookResponse.setId(book.getId());
         borrowBookResponse.setTitle(book.getTitle());
         borrowBookResponse.setAuthor(book.getAuthor());
         borrowBookResponse.setPublisher(book.getPublisher());

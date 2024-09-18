@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BookRepository extends JpaRepository<Book, Long> {
+public interface BookRepository extends JpaRepository<Book, String> {
 
     String findByISBN = """
             SELECT
@@ -37,7 +37,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
            where book.available = true
            AND book.isDeleted = 'N'
            """)
-    Book findByIdAndIsDeleted(Long bookId);
+    Book findByIdAndIsDeleted(String bookId);
 
     @Query(nativeQuery = true, value = findByISBN)
     Page<Book> findByISBN(@Param("isbn") String isbn, Pageable pageable);

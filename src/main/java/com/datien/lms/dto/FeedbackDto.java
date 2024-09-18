@@ -22,5 +22,5 @@ public class FeedbackDto {
     private Timestamp createdAt;
 
     @Column(name = "CREATED_BY")
-    private Long createdBy;
+    private String createdBy;
 }

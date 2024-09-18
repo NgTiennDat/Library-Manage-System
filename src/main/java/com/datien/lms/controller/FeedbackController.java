@@ -21,7 +21,7 @@ public class FeedbackController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> createFeedback(
             @RequestBody @Valid FeedbackRequest request,
-            @RequestParam(name = "bookId", defaultValue = "") Long bookId,
+            @RequestParam(name = "bookId", defaultValue = "") String bookId,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(feedbackService.createFeedback(request, bookId, connectedUser)));
@@ -30,7 +30,7 @@ public class FeedbackController {
     @GetMapping("{book-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> getAllFeedbackByBookId(
-            @PathVariable("book-id") Long bookId,
+            @PathVariable("book-id") String bookId,
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
             Authentication connectedUser
@@ -41,7 +41,7 @@ public class FeedbackController {
     @PatchMapping("/update/{feedback-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> updateDetailFeedback(
-            @PathVariable("feedback-id") Long feedbackId,
+            @PathVariable("feedback-id") String feedbackId,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(feedbackService.updateDetailedFeedback(feedbackId, connectedUser)));
@@ -50,7 +50,7 @@ public class FeedbackController {
     @DeleteMapping("{feedback-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> deleteFeedback(
-            @PathVariable("feedback-id") Long feedbackId,
+            @PathVariable("feedback-id") String feedbackId,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(feedbackService.deleteFeedback(feedbackId, connectedUser)));

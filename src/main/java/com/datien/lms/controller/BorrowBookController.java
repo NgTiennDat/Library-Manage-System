@@ -18,7 +18,7 @@ public class BorrowBookController {
     @PostMapping("/borrowed/{book-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> borrowBook(
-            @PathVariable("book-id") Long bookId,
+            @PathVariable("book-id") String bookId,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(borrowBookService.borrowBook(bookId, connectedUser)));
@@ -27,7 +27,7 @@ public class BorrowBookController {
     @PatchMapping("/borrowed/returned/{book-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> returnBook(
-            @PathVariable("book-id") Long bookId,
+            @PathVariable("book-id") String bookId,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(borrowBookService.returnBook(bookId, connectedUser)));
@@ -36,7 +36,7 @@ public class BorrowBookController {
     @PatchMapping("/borrowed/returned/approved/{book-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> approveBook(
-            @PathVariable("book-id") Long bookId,
+            @PathVariable("book-id") String bookId,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(borrowBookService.returnApproveBook(bookId, connectedUser)));

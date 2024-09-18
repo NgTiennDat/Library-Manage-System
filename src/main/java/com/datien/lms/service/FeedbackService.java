@@ -33,7 +33,7 @@ public class FeedbackService {
     private final BookRepository bookRepository;
     private final FeedbackRepository feedbackRepository;
 
-    public Map<Object, Object> createFeedback(FeedbackRequest request, Long bookId, Authentication connectedUser) {
+    public Map<Object, Object> createFeedback(FeedbackRequest request, String bookId, Authentication connectedUser) {
 
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = new Result();
@@ -73,7 +73,7 @@ public class FeedbackService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> getAllFeedbackByBookId(Long bookId, int pageSize, int pageNumber, Authentication connectedUser) {
+    public Map<Object, Object> getAllFeedbackByBookId(String bookId, int pageSize, int pageNumber, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = new Result();
         String notification = "";
@@ -129,7 +129,7 @@ public class FeedbackService {
     }
 
 
-    public Map<Object, Object> updateDetailedFeedback(Long feedbackId, Authentication connectedUser) {
+    public Map<Object, Object> updateDetailedFeedback(String feedbackId, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = new Result();
 
@@ -166,7 +166,7 @@ public class FeedbackService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> deleteFeedback(Long feedbackId, Authentication connectedUser) {
+    public Map<Object, Object> deleteFeedback(String feedbackId, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = new Result();
 

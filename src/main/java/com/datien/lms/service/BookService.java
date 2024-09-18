@@ -149,7 +149,7 @@ public class BookService {
         return resultExecuted;
     }
 
-    public Map<Object, Object> getDetailBook(Long bookId) {
+    public Map<Object, Object> getDetailBook(String bookId) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
 
@@ -176,7 +176,7 @@ public class BookService {
 //        return bookMapper.toBookResponse(book);
 //    }
 
-    public Map<Object, Object> deleteBook(Long bookId, boolean hardDelete, Authentication connectedUser) {
+    public Map<Object, Object> deleteBook(String bookId, boolean hardDelete, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
         String notification = "";
@@ -324,7 +324,7 @@ public class BookService {
         return resultExecute;
     }
 
-    public Map<Object, Object> uploadBookCoverPicture(MultipartFile file, Authentication connectedUser, Long bookId) {
+    public Map<Object, Object> uploadBookCoverPicture(MultipartFile file, Authentication connectedUser, String bookId) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
 

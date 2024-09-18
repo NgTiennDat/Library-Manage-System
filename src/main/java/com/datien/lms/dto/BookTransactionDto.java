@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookTransactionDto {
-    private Long userId;
+    private String userId;
     private Book book;
     private boolean returnApproved;
     private boolean returned;

@@ -36,7 +36,7 @@ public class AdminController {
             }
     )
     public ResponseEntity<?> getStudentId(
-            @PathVariable("student-id") Long studentId,
+            @PathVariable("student-id") String studentId,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(adminService.getStudentById(studentId, connectedUser)));
@@ -90,7 +90,7 @@ public class AdminController {
     )
     public ResponseEntity<?> update(
             @RequestBody AdminRequest request,
-            @PathVariable Long adminId,
+            @PathVariable("adminId") String adminId,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(adminService.updateAdminInfo(request, adminId, connectedUser)));
@@ -108,7 +108,7 @@ public class AdminController {
             }
     )
     public ResponseEntity<?> delete(
-            @PathVariable("student-id") Long studentId,
+            @PathVariable("student-id") String studentId,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(adminService.deleteStudent(studentId, connectedUser)));
