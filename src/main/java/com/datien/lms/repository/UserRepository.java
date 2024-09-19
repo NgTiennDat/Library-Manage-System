@@ -12,7 +12,6 @@ public interface UserRepository extends JpaRepository<User, String> {
             From User u
             WHERE u.isDeleted = 'N'
             AND u.email = :email
-            AND u.isDeleted = :isDeleted
             """)
-    User findByEmailAndIsDeleted(String email, String isDeleted);
+    Optional<User> findByEmail(String email);
 }

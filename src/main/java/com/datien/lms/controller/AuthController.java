@@ -29,7 +29,7 @@ public class AuthController {
     public ResponseEntity<?> authenticate(
             @Valid @RequestBody AuthRequest request
     ) {
-        return ResponseEntity.ok(ResponseData.createResponse(service.doLogin(request)));
+        return ResponseEntity.ok(ResponseData.createResponse(service.doLogin1(request)));
     }
 
     @GetMapping(value = "/token")

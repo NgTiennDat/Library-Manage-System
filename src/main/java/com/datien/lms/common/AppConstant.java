@@ -26,5 +26,4 @@ public class AppConstant {
         String IS_DELETED = "Y";
         String IS_UN_DELETED = "N";
     }
-
 }

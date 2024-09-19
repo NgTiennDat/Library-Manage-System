@@ -12,33 +12,22 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tbl_user_otp")
-public class UserOtp {
-
+@Table(name = "user_otp")
+public class Otp {
     @Id
-    @Column(name = "ID")
     private String id;
 
-    @Column(name = "CODE")
     private String code;
-
-    @Column(name = "CREATED_AT")
     private LocalDateTime createdAt;
-
-    @Column(name = "EXPIRED_AT")
     private LocalDateTime expiredAt;
-
-    @Column(name = "VALIDATED_AT")
     private LocalDateTime validatedAt;
-
-    @Column(name = "USERNAME")
     private String username;
 
     @Column(name = "IS_DELETED")
     private String isDeleted;
 
     @OneToOne
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "userId")
     private User user;
 
     @PrePersist

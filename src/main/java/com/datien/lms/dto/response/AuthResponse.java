@@ -10,9 +10,6 @@ import lombok.*;
 @Builder
 public class AuthResponse {
 
-    @JsonProperty("session_id")
-    private String sessionId;
-
     @JsonProperty("access-token")
     private String accessToken;
 
