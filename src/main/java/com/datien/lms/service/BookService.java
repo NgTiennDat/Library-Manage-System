@@ -72,20 +72,21 @@ public class BookService {
         String notification = "";
 
         try {
-            var user1 = userRepository.findByEmail(connectedUser.getName());
+            var user1 = userRepository.findByEmailAndIsDeleted(connectedUser.getName(), AppConstant.STATUS.IS_UN_DELETED);
 
-            if(user1.isEmpty()) {
+            if(user1 == null) {
                 result = new Result(ResponseCode.USER_NOTFOUND.getCode(), false, ResponseCode.USER_NOTFOUND.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                return resultExecuted;
             }
 
-            if(!user1.get().isEnabled()) {
+            if(!user1.isEnabled()) {
                 result = new Result(ResponseCode.ACCOUNT_LOCKED.getCode(), false, ResponseCode.ACCOUNT_LOCKED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
 
 //            User user = (User) connectedUser.getPrincipal(); // Khai báo biến user ở đây
-            if (user1.get().getRole() == Role.STUDENT) {
+            if (user1.getRole() == Role.STUDENT) {
                 result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
                 return resultExecuted;
@@ -103,9 +104,9 @@ public class BookService {
             book.setGenre(bookRequest.getGenre());
             book.setAvailable(bookRequest.isAvailable());
             book.setArchived(bookRequest.isArchived());
-            book.setCreatedBy(user1.get().getId());
+            book.setCreatedBy(user1.getId());
             book.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
-            book.setLastModifiedBy(user1.get().getUsername());
+            book.setLastModifiedBy(user1.getUsername());
 
             bookRepository.save(book);
             notification = "Successfully added book.";

@@ -1,8 +1,8 @@
 package com.datien.lms.service;
 
-import com.datien.lms.dao.Otp;
+import com.datien.lms.dao.UserOtp;
 import com.datien.lms.dao.User;
-import com.datien.lms.repository.OtpRepository;
+import com.datien.lms.repository.UserOtpRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class EmailService {
 
     private final JavaMailSender mailSender;
-    private final OtpRepository otpRepository;
+    private final UserOtpRepository userOtpRepository;
 
     @Async
     public void sendEmail(
@@ -70,14 +70,14 @@ public class EmailService {
     private String generateAndSavedActiveCode(User user) {
         String activateCode = generateActiveCode(6);
 
-        var otp = Otp.builder()
+        var otp = UserOtp.builder()
                 .code(activateCode)
                 .createdAt(LocalDateTime.now())
                 .expiredAt(LocalDateTime.now().plusMinutes(15))
                 .user(user)
                 .username(user.getFullName())
                 .build();
-        otpRepository.save(otp);
+        userOtpRepository.save(otp);
         return activateCode;
     }
 

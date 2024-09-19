@@ -45,6 +45,9 @@ public class User implements UserDetails {
     @Column(name = "IS_DELETED")
     private String isDeleted;
 
+    @Column(name = "status")
+    private int status;
+
     @Column(name = "USER_ROLE")
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -86,6 +89,11 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 
     public String getFullName() {

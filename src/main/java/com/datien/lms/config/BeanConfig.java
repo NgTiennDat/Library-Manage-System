@@ -1,5 +1,6 @@
 package com.datien.lms.config;
 
+import com.datien.lms.common.AppConstant;
 import com.datien.lms.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,8 +22,7 @@ public class BeanConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return username -> userRepository.findByEmailAndIsDeleted(username, AppConstant.STATUS.IS_UN_DELETED);
     }
 
     @Bean

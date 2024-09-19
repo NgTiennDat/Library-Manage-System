@@ -2,7 +2,6 @@ package com.datien.lms.service;
 
 import com.datien.lms.common.AppConstant;
 import com.datien.lms.common.Result;
-import com.datien.lms.dao.Otp;
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.request.UserChangePasswordRequest;
@@ -11,9 +10,8 @@ import com.datien.lms.dto.request.UserRequest;
 import com.datien.lms.dto.request.UserResetPasswordRequest;
 import com.datien.lms.dto.response.UserResponse;
 import com.datien.lms.handlerException.ResponseCode;
-import com.datien.lms.repository.OtpRepository;
+import com.datien.lms.repository.UserOtpRepository;
 import com.datien.lms.repository.UserRepository;
-import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -35,7 +33,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-    private final OtpRepository otpRepository;
+    private final UserOtpRepository userOtpRepository;
 
     public Map<Object, Object> register(UserRequest request) {
         Map<Object, Object> resultExecuted = new HashMap<>();
@@ -43,9 +41,9 @@ public class UserService {
         String notification = "";
 
         try {
-            var email = userRepository.findByEmail(request.getEmail());
+            var email = userRepository.findByEmailAndIsDeleted(request.getEmail(), AppConstant.STATUS.IS_UN_DELETED);
 
-            if(email.isPresent()) {
+            if(email == null) {
                result = new Result(ResponseCode.EMAIL_ALREADY_EXISTS.getCode(), false, ResponseCode.EMAIL_ALREADY_EXISTS.getMessage());
                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
                return resultExecuted;
@@ -92,10 +90,10 @@ public class UserService {
         Result result = Result.OK("");
         String notification = "";
         try {
-            var savedCode = otpRepository.findByCode(activationCode);
+            var savedCode = userOtpRepository.findByCode(activationCode);
 
             if (savedCode.getExpiredAt().isBefore(LocalDateTime.now())) {
-                otpRepository.delete(savedCode);
+                userOtpRepository.delete(savedCode);
                 notification = "OTP has expired, another OTP has sent.";
                 emailService.sendValidEmail(savedCode.getUser());
                 result = new Result(ResponseCode.OTP_EXPIRED.getCode(), false, ResponseCode.OTP_EXPIRED.getMessage());
@@ -164,16 +162,20 @@ public class UserService {
         String notification = "";
 
         try {
-            User user = userRepository.findByEmail(request.getEmail())
-                    .orElseThrow(() -> new RuntimeException("No user with email: " + request.getEmail()));
+            User user = userRepository.findByEmailAndIsDeleted(request.getEmail(), AppConstant.STATUS.IS_UN_DELETED);
+            if (user == null) {
+                result = new Result(ResponseCode.USER_NOTFOUND.getCode(), false, ResponseCode.USER_NOTFOUND.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                return resultExecuted;
+            }
 
-            var oldActivateCode = otpRepository.findByUserId(user.getId());
+            var oldActivateCode = userOtpRepository.findByUserId(user.getId());
 
             if (oldActivateCode.isEmpty()) {
                 emailService.sendValidEmail(user);
             }
 
-            otpRepository.delete(oldActivateCode.get());
+            userOtpRepository.delete(oldActivateCode.get());
             user.setEnabled(false);
             userRepository.save(user);
             emailService.sendValidEmail(user);
@@ -197,26 +199,26 @@ public class UserService {
         String notification = "";
 
         try {
-            var user = userRepository.findByEmail(userResetPassword.getEmail());
+            var user = userRepository.findByEmailAndIsDeleted(userResetPassword.getEmail(), AppConstant.STATUS.IS_UN_DELETED);
 
-            if(user.isEmpty()) {
+            if(user == null) {
                 result = new Result(ResponseCode.USER_NOTFOUND.getCode(), false, ResponseCode.USER_NOTFOUND.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
                 return resultExecuted;
             }
 
-            var activeCode = otpRepository.findByUserId(user.get().getId())
+            var activeCode = userOtpRepository.findByUserId(user.getId())
                     .orElseThrow(() -> new RuntimeException("No activate code found."));
 
             if (activeCode.getExpiredAt().isBefore(LocalDateTime.now())) {
-                emailService.sendValidEmail(user.get());
+                emailService.sendValidEmail(user);
                 result = new Result(ResponseCode.OTP_EXPIRED.getCode(), false, ResponseCode.OTP_EXPIRED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
 
-            user.get().setPassword(passwordEncoder.encode(userResetPassword.getNewPassword()));
-            userRepository.save(user.get());
-            otpRepository.save(activeCode);
+            user.setPassword(passwordEncoder.encode(userResetPassword.getNewPassword()));
+            userRepository.save(user);
+            userOtpRepository.save(activeCode);
             notification = "Successfully Reset password.";
 
         } catch (Exception ex) {

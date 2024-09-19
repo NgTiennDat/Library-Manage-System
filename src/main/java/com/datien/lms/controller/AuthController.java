@@ -29,23 +29,23 @@ public class AuthController {
     public ResponseEntity<?> authenticate(
             @Valid @RequestBody AuthRequest request
     ) {
-        return ResponseEntity.ok(ResponseData.createResponse(service.doLogin1(request)));
+        return ResponseEntity.ok(ResponseData.createResponse(service.doLogin(request)));
     }
 
-    @GetMapping(value = "/token")
-    public ResponseEntity<BaseResponse> generateToken() {
-        BaseResponse response = new BaseResponse();
-        response.setResult(Result.OK("Successful!"));
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof User) {
-                String token = jwtService.generateToken((User) principal);
-                AuthResponse authResponse = new AuthResponse(token);
-                response.setData(authResponse);
-            }
-        }
-        return ResponseEntity.ok(response);
-    }
+//    @GetMapping(value = "/token")
+//    public ResponseEntity<BaseResponse> generateToken() {
+//        BaseResponse response = new BaseResponse();
+//        response.setResult(Result.OK("Successful!"));
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication != null) {
+//            Object principal = authentication.getPrincipal();
+//            if (principal instanceof User) {
+//                String token = jwtService.generateToken((User) principal);
+//                AuthResponse authResponse = new AuthResponse(token);
+//                response.setData(authResponse);
+//            }
+//        }
+//        return ResponseEntity.ok(response);
+//    }
 
 }
