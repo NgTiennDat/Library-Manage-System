@@ -14,6 +14,4 @@ public class SessionData implements Serializable {
     private String sessionId;
     private String userId;
     private String userName;
-    private String deviceId;
-    private String deviceName;
 }
