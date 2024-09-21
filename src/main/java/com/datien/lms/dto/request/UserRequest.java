@@ -42,6 +42,10 @@ public class UserRequest {
     @NotNull(message = "sex is mandatory.")
     private SEX sex;
 
+    @NotBlank(message = "status is mandatory")
+    private int status;
+
+    @NotBlank(message = "enabled is mandatory")
     private boolean enabled;
 
     @NotNull(message = "sex is mandatory.")

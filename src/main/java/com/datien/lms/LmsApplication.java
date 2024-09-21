@@ -25,39 +25,41 @@ public class LmsApplication {
         SpringApplication.run(LmsApplication.class, args);
     }
 
-//    @Bean
-//    public CommandLineRunner runner(
-//            UserService service
-//    ) {
-//        return args -> {
-//            var admin = new UserRequest();
-//            admin.setFirstname("Admin");
-//            admin.setLastname("Admin");
-//            admin.setEmail("admin@mail.com");
-//            admin.setPassword("password1");
-//            admin.setRole(ADMIN);
-//            admin.setLoginCount(0);
-//            admin.setSex(SEX.MALE);
-//            admin.setIsDeleted("N");
-//            admin.setPhone("12429238231");
-//            admin.setEnabled(true);
-//
-//            service.register(admin);
-//
-//            var manager = new UserRequest();
-//            manager.setFirstname("Manager");
-//            manager.setLastname("Manager");
-//            manager.setEmail("manager@mail.com");
-//            manager.setPassword("password2");
-//            manager.setRole(MANAGER);
-//            manager.setLoginCount(0);
-//            manager.setIsDeleted("N");
-//            manager.setSex(SEX.FEMALE);
-//            manager.setPhone("12429238231");
-//            manager.setEnabled(true);
-//
-//            service.register(manager);
-//        };
-//    }
+    @Bean
+    public CommandLineRunner runner(UserService service) {
+        return args -> {
+            // Create Admin User
+            var admin = UserRequest.builder()
+                    .firstname("Admin")
+                    .lastname("Admin")
+                    .email("admin@mail.com")
+                    .password("password1")
+                    .role(ADMIN)
+                    .loginCount(0)
+                    .sex(SEX.MALE)
+                    .isDeleted("N")
+                    .status(0)
+                    .phone("12429238231")
+                    .enabled(true)
+                    .build();
+            service.register(admin);
+
+            // Create Manager User
+            var manager = UserRequest.builder()
+                    .firstname("Manager")
+                    .lastname("Manager")
+                    .email("manager@mail.com")
+                    .password("password2")
+                    .role(MANAGER)
+                    .loginCount(0)
+                    .isDeleted("N")
+                    .sex(SEX.FEMALE)
+                    .status(0)
+                    .enabled(true)
+                    .phone("12429238231")
+                    .build();
+            service.register(manager);
+        };
+    }
 
 }

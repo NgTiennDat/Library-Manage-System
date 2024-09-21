@@ -43,7 +43,7 @@ public class UserService {
         try {
             var email = userRepository.findByEmailAndIsDeleted(request.getEmail(), AppConstant.STATUS.IS_UN_DELETED);
 
-            if(email == null) {
+            if(email != null) {
                result = new Result(ResponseCode.EMAIL_ALREADY_EXISTS.getCode(), false, ResponseCode.EMAIL_ALREADY_EXISTS.getMessage());
                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
                return resultExecuted;
@@ -60,6 +60,7 @@ public class UserService {
             newUser.setPhone(request.getPhone());
             newUser.setIsDeleted("N");
             newUser.setRole(request.getRole());
+            newUser.setStatus(request.getStatus());
             newUser.setEnabled(request.isEnabled());
             newUser.setLoginCount(0);
 
