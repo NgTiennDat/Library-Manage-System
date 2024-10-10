@@ -72,7 +72,7 @@ public class AdminController {
     }
 
     @PutMapping("/{adminId}")
-    @PreAuthorize("hasAuthority('admin:update')")
+    @PreAuthorize("hasAuthority('admin::update')")
     @Hidden
     @Operation(
             description = "Update an existing admin",
@@ -91,7 +91,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/{student-id}")
-    @PreAuthorize("hasAuthority('admin:delete')")
+    @PreAuthorize("hasAuthority('admin::delete')")
     @Hidden
     @Operation(
             description = "Delete an admin by ID",

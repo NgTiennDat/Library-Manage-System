@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,7 @@ public class BookController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasAnyAuthority('admin::create')")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createBook(
             @RequestBody BookRequest bookRequest,
@@ -56,6 +58,7 @@ public class BookController {
     }
 
     @GetMapping("/borrowed")
+    @PreAuthorize("hasAnyAuthority('admin::read')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> findAllBorrowedBook(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
@@ -66,6 +69,7 @@ public class BookController {
     }
 
     @GetMapping("/returned")
+    @PreAuthorize("hasAnyAuthority('admin::read')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> findAllReturnedBook(
             @RequestParam(name = "page", defaultValue = "10", required = false) int page,
@@ -75,9 +79,8 @@ public class BookController {
         return ResponseEntity.ok(ResponseData.createResponse(bookService.getAllReturnedBooks(page, size, connectedUser)));
     }
 
-
-
     @DeleteMapping("/{book-id}")
+    @PreAuthorize("hasAnyAuthority('admin::delete')")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> deleteBook(
             @PathVariable("book-id") String bookId,
@@ -88,6 +91,8 @@ public class BookController {
     }
 
     @PostMapping(value = "/cover/{book-id}", consumes = "multipart/form-data")
+    @PreAuthorize("hasAnyAuthority('admin::create')")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> uploadBookCoverPicture(
             @PathVariable("book-id") String bookId,
             @Parameter()

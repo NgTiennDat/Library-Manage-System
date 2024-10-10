@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,7 @@ public class ManagementController {
             }
     )
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('manager::create')")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createAdmin(
             @RequestBody UserRequest request,
@@ -58,6 +60,7 @@ public class ManagementController {
             }
     )
     @PutMapping("/update/{admin-id}")
+    @PreAuthorize("hasAuthority('manager::update')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> updateAdmin(
             @RequestBody UserRequest request,
@@ -82,6 +85,7 @@ public class ManagementController {
             }
     )
     @DeleteMapping("/delete/{admin-id}")
+    @PreAuthorize("hasAuthority('manager::delete')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> deleteAdmin(
             @PathVariable("admin-id") String adminId,
@@ -102,6 +106,7 @@ public class ManagementController {
             }
     )
     @GetMapping("/all")
+    @PreAuthorize("hasAnyAuthority('manager::read')")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getAllAdmins(
             @RequestParam(defaultValue = "0") int page,
@@ -126,6 +131,7 @@ public class ManagementController {
             }
     )
     @GetMapping("/detail/{admin-id}")
+    @PreAuthorize("hasAuthority('manager::read')")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getAdminDetail(
             @PathVariable("admin-id") String adminId,

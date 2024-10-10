@@ -40,32 +40,6 @@ public class BookService {
     private final BookTransactionHistoryRepository bookTransactionHistoryRepository;
     private final FileService fileService;
 
-//    public void createBook(
-//            BookRequest bookRequest,
-//            Authentication connectedUser
-//    ) {
-//        User user = (User) connectedUser.getPrincipal();
-//        if(user.getRole() != Role.ADMIN) {
-//            throw new AccessDeniedException("You dont have permission to add book to the library");
-//        }
-//
-//        var book = new Book();
-//        book.setTitle(bookRequest.getTitle());
-//        book.setAuthor(bookRequest.getAuthor());
-//        book.setPublisher(bookRequest.getPublisher());
-//        book.setISBN(bookRequest.getISBN());
-//        book.setSynopsis(bookRequest.getSynopsis());
-//        book.setPageCount(bookRequest.getPageCount());
-//        book.setGenre(bookRequest.getGenre());
-//        book.setAvailable(bookRequest.isAvailable());
-//        book.setArchived(bookRequest.isArchived());
-//        book.setCreatedBy(user.getId());
-//        book.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
-//        book.setLastModifiedBy(user.getUsername());
-//        bookRepository.save(book);
-//
-//    }
-
     public Map<Object, Object> createBook(BookRequest bookRequest, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result;
