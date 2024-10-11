@@ -1,6 +1,6 @@
 package com.datien.lms.controller;
 
-import com.datien.lms.dto.request.BookRequest;
+import com.datien.lms.dto.request.model.BookRequest;
 import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.BookService;
 import io.swagger.v3.oas.annotations.Parameter;

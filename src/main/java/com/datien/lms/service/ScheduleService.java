@@ -3,7 +3,7 @@ package com.datien.lms.service;
 import com.datien.lms.common.AppConstant;
 import com.datien.lms.common.Result;
 import com.datien.lms.dao.*;
-import com.datien.lms.dto.request.ScheduleRequest;
+import com.datien.lms.dto.request.model.ScheduleRequest;
 import com.datien.lms.handlerException.ResponseCode;
 import com.datien.lms.repository.BookRepository;
 import com.datien.lms.repository.ScheduleRepository;

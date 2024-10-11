@@ -1,9 +1,9 @@
 package com.datien.lms.controller;
 
-import com.datien.lms.dto.request.UserChangePasswordRequest;
-import com.datien.lms.dto.request.UserForgotPasswordRequest;
-import com.datien.lms.dto.request.UserRequest;
-import com.datien.lms.dto.request.UserResetPasswordRequest;
+import com.datien.lms.dto.request.model.UserChangePasswordRequest;
+import com.datien.lms.dto.request.model.UserForgotPasswordRequest;
+import com.datien.lms.dto.request.model.UserRequest;
+import com.datien.lms.dto.request.model.UserResetPasswordRequest;
 import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.UserService;
 import lombok.RequiredArgsConstructor;

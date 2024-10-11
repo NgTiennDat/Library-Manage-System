@@ -1,7 +1,6 @@
 package com.datien.lms.controller;
 
-import com.datien.lms.dao.ScheduleStatus;
-import com.datien.lms.dto.request.ScheduleRequest;
+import com.datien.lms.dto.request.model.ScheduleRequest;
 import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.ScheduleService;
 import jakarta.validation.Valid;

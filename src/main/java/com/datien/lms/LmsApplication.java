@@ -1,8 +1,7 @@
 package com.datien.lms;
 
 import com.datien.lms.dao.SEX;
-import com.datien.lms.dao.User;
-import com.datien.lms.dto.request.UserRequest;
+import com.datien.lms.dto.request.model.UserRequest;
 import com.datien.lms.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,8 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-
-import java.util.UUID;
 
 import static com.datien.lms.dao.Role.ADMIN;
 import static com.datien.lms.dao.Role.MANAGER;

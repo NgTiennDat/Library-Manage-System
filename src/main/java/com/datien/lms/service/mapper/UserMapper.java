@@ -2,7 +2,7 @@ package com.datien.lms.service.mapper;
 
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
-import com.datien.lms.dto.request.UserRequest;
+import com.datien.lms.dto.request.model.UserRequest;
 import com.datien.lms.dto.response.UserResponse;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package com.datien.lms.controller;
 
-import com.datien.lms.dto.request.FeedbackRequest;
+import com.datien.lms.dto.request.model.FeedbackRequest;
 import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.FeedbackService;
 import jakarta.validation.Valid;

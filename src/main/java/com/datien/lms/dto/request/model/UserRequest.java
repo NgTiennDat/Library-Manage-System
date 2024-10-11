@@ -1,4 +1,4 @@
-package com.datien.lms.dto.request;
+package com.datien.lms.dto.request.model;
 
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.SEX;

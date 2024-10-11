@@ -7,11 +7,12 @@ import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
-public class RedisService {
+public class    RedisService {
 
     private final RedissonClient redissonClient;
     final int MAX_TRANSACTION_TIMEOUT = 30;
@@ -88,6 +89,10 @@ public class RedisService {
     public String getOTP(String key) {
         RMapCache<String, String> otpMap = redissonClient.getMapCache(OTP_MAP);
         return otpMap.get(key);
+    }
+
+    public void saveSession(String sessionId, String jwtToken, Date expiryTime) {
+        redissonClient.getBucket(sessionId).set(jwtToken, expiryTime.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
     }
 
 }

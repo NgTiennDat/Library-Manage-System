@@ -7,7 +7,7 @@ import com.datien.lms.dao.BookTransactionHistory;
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.BookTransactionDto;
-import com.datien.lms.dto.request.BookRequest;
+import com.datien.lms.dto.request.model.BookRequest;
 import com.datien.lms.dto.response.BookResponse;
 import com.datien.lms.dto.response.BookTransactionResponse;
 import com.datien.lms.handlerException.ResponseCode;

@@ -1,4 +1,4 @@
-package com.datien.lms.dto.request;
+package com.datien.lms.dto.request.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

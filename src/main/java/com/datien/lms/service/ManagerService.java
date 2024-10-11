@@ -5,7 +5,7 @@ import com.datien.lms.common.Result;
 import com.datien.lms.dao.Admin;
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
-import com.datien.lms.dto.request.UserRequest;
+import com.datien.lms.dto.request.model.UserRequest;
 import com.datien.lms.dto.response.AdminResponse;
 import com.datien.lms.handlerException.ResponseCode;
 import com.datien.lms.repository.AdminRepository;

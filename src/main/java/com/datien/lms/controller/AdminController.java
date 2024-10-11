@@ -1,6 +1,6 @@
 package com.datien.lms.controller;
 
-import com.datien.lms.dto.request.UserRequest;
+import com.datien.lms.dto.request.model.UserRequest;
 import com.datien.lms.dto.response.baseResponse.ResponseData;
 import com.datien.lms.service.AdminService;
 import io.swagger.v3.oas.annotations.Hidden;

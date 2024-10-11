@@ -6,7 +6,7 @@ import com.datien.lms.dao.Feedback;
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
 import com.datien.lms.dto.FeedbackDto;
-import com.datien.lms.dto.request.FeedbackRequest;
+import com.datien.lms.dto.request.model.FeedbackRequest;
 import com.datien.lms.dto.response.FeedbackResponse;
 import com.datien.lms.handlerException.ResponseCode;
 import com.datien.lms.repository.BookRepository;
