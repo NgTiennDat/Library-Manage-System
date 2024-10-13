@@ -50,11 +50,9 @@ public class Book {
     @Column(name = "IS_ARCHIVED")
     private boolean archived;
 
-    @CreationTimestamp
-    @Column(name = "CREATED_AT", insertable = false)
-    private Timestamp createdAt;
+    @Column(name = "CREATED_AT")
+    private LocalDateTime createdAt;
 
-    @LastModifiedDate
     @Column(name = "MODIFIED_AT")
     private LocalDateTime lastModifiedAt;
 

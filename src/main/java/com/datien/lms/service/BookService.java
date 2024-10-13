@@ -42,7 +42,7 @@ public class BookService {
 
     public Map<Object, Object> createBook(BookRequest bookRequest, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
-        Result result;
+        Result result = Result.OK("");
         String notification = "";
 
         try {
@@ -79,13 +79,12 @@ public class BookService {
             book.setAvailable(bookRequest.isAvailable());
             book.setArchived(bookRequest.isArchived());
             book.setCreatedBy(user1.getId());
-            book.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+            book.setCreatedAt(LocalDateTime.now());
             book.setLastModifiedBy(user1.getUsername());
 
             bookRepository.save(book);
             notification = "Successfully added book.";
 
-            result = new Result(ResponseCode.SYSTEM.getCode(), true, ResponseCode.SYSTEM.getMessage());
         } catch (Exception ex) {
             logger.error("Some errors occurs when adding a book.", ex);
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ResponseCode.SYSTEM.getMessage());
