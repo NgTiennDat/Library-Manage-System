@@ -3,6 +3,7 @@ package com.datien.lms.service;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,11 +19,11 @@ import static java.io.File.separator;
 @RequiredArgsConstructor
 public class FileService {
 
+    @Value("${application.file.uploads.photos-output-path}")
     private String fileUploadPath;
 
     public String saveFile(
             @Nonnull MultipartFile sourceFile,
-            @Nonnull String bookId,
             @Nonnull String userId
     ) {
         final String fileUploadSubPath = "users" + separator + userId;
@@ -33,9 +34,14 @@ public class FileService {
             @Nonnull MultipartFile sourceFile,
             @Nonnull String fileUploadSubPath
     ) {
+        if(sourceFile.isEmpty()) {
+            log.error("Uploaded file is empty.");
+            return null;
+        }
+
         final String finalUploadPath = fileUploadPath + separator + fileUploadSubPath;
 
-        File targetFolder = new File(fileUploadSubPath);
+        File targetFolder = new File(finalUploadPath);
 
         if(!targetFolder.exists()) {
             boolean folderCreated = targetFolder.mkdirs();
@@ -63,7 +69,7 @@ public class FileService {
         if(originalFilename == null) {
             return "";
         }
-        if(originalFilename.lastIndexOf(".") != -1) {
+        if(originalFilename.lastIndexOf(".") == -1) {
             return "";
         }
         return originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase();

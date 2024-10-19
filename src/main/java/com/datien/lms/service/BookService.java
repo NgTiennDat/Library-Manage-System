@@ -15,6 +15,7 @@ import com.datien.lms.repository.BookRepository;
 import com.datien.lms.repository.BookTransactionHistoryRepository;
 import com.datien.lms.repository.UserRepository;
 import com.datien.lms.service.mapper.BookMapper;
+import com.datien.lms.utils.FileUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -40,27 +41,27 @@ public class BookService {
     private final BookTransactionHistoryRepository bookTransactionHistoryRepository;
     private final FileService fileService;
 
-    public Map<Object, Object> createBook(BookRequest bookRequest, Authentication connectedUser) {
+    public Map<Object, Object> createBook(BookRequest bookRequest, MultipartFile bookCover, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
         String notification = "";
 
         try {
-            var user1 = userRepository.findByEmailAndIsDeleted(connectedUser.getName(), AppConstant.STATUS.IS_UN_DELETED);
+            var user = userRepository.findByEmailAndIsDeleted(connectedUser.getName(), AppConstant.STATUS.IS_UN_DELETED);
 
-            if(user1 == null) {
+            if(user == null) {
                 result = new Result(ResponseCode.USER_NOTFOUND.getCode(), false, ResponseCode.USER_NOTFOUND.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
                 return resultExecuted;
             }
 
-            if(!user1.isEnabled()) {
+            if(!user.isEnabled()) {
                 result = new Result(ResponseCode.ACCOUNT_LOCKED.getCode(), false, ResponseCode.ACCOUNT_LOCKED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
 
 //            User user = (User) connectedUser.getPrincipal(); // Khai báo biến user ở đây
-            if (user1.getRole() == Role.STUDENT) {
+            if (user.getRole() == Role.STUDENT) {
                 result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
                 return resultExecuted;
@@ -78,9 +79,17 @@ public class BookService {
             book.setGenre(bookRequest.getGenre());
             book.setAvailable(bookRequest.isAvailable());
             book.setArchived(bookRequest.isArchived());
-            book.setCreatedBy(user1.getId());
+            book.setCreatedBy(user.getId());
             book.setCreatedAt(LocalDateTime.now());
-            book.setLastModifiedBy(user1.getUsername());
+            book.setLastModifiedBy(user.getUsername());
+
+            String coverPath = fileService.saveFile(bookCover, user.getId());
+            if(coverPath == null) {
+                result = new Result(ResponseCode.PATH_NOT_FOUND.getCode(), false, ResponseCode.PATH_NOT_FOUND.getMessage());
+                resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
+                return resultExecuted;
+            }
+            book.setBookCover(coverPath);
 
             bookRepository.save(book);
             notification = "Successfully added book.";
@@ -249,7 +258,7 @@ public class BookService {
         Map<Object, Object> resultExecute = new HashMap<>();
         Result result = new Result();
 
-        BookTransactionResponse bookTransactionResponse = new BookTransactionResponse();
+        BookTransactionResponse response = new BookTransactionResponse();
         List<BookTransactionDto> bookTransactionDtos = new ArrayList<>();
         try {
             User user = (User) connectedUser.getPrincipal();
@@ -276,8 +285,8 @@ public class BookService {
                     .limit(size)
                     .toList();
 
-            bookTransactionResponse.setBookTransactionDtos(paginatedList);
-            bookTransactionResponse.setTotalRecords(bookTransactionDtos.size());
+            response.setBookTransactionDtos(paginatedList);
+            response.setTotalRecords(bookTransactionDtos.size());
 
         } catch (Exception ex) {
             result = new Result(ResponseCode.SYSTEM.getCode(), false, ex.getMessage());
@@ -307,7 +316,7 @@ public class BookService {
                 return resultExecuted;
             }
 
-            var profilePicture = fileService.saveFile(file, bookId, user.getId());
+            var profilePicture = fileService.saveFile(file, user.getId());
             book.setBookCover(profilePicture);
             bookRepository.save(book);
 

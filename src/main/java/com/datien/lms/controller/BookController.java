@@ -32,10 +32,11 @@ public class BookController {
     @PreAuthorize("hasAnyAuthority('admin::create')")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createBook(
-            @RequestBody BookRequest bookRequest,
+            @RequestPart("bookRequest") BookRequest bookRequest,
+            @RequestPart("bookCover") MultipartFile bookCover,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(ResponseData.createResponse(bookService.createBook(bookRequest, connectedUser)));
+        return ResponseEntity.ok(ResponseData.createResponse(bookService.createBook(bookRequest, bookCover, connectedUser)));
     }
 
     @GetMapping("/all")
@@ -95,7 +96,6 @@ public class BookController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> uploadBookCoverPicture(
             @PathVariable("book-id") String bookId,
-            @Parameter()
             @RequestPart("file") MultipartFile file,
             Authentication connectedUser
     ) {
