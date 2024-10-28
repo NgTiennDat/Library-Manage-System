@@ -51,7 +51,7 @@ public class UserController {
     @PostMapping("/password/reset")
     public ResponseEntity<?> resetPassword(
             @RequestBody UserResetPasswordRequest request
-    ) { 
+    ) {
         return ResponseEntity.ok(ResponseData.createResponse(userService.handleResetPassword(request)));
     }
 
