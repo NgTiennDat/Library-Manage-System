@@ -233,11 +233,5 @@ public class UserService {
         return resultExecuted;
     }
 
-    private UserResponse buildUserResponse(String jwtToken, String refreshToken) {
-        return UserResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
-    }
 }
 
