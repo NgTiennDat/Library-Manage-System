@@ -107,5 +107,4 @@ public class AdminController {
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(adminService.deleteStudent(studentId, connectedUser)));
     }
-
 }
