@@ -24,7 +24,7 @@ public class BorrowBookController {
         return ResponseEntity.ok(ResponseData.createResponse(borrowBookService.borrowBook(bookId, connectedUser)));
     }
 
-    @PatchMapping("/borrowed/returned/{book-id}")
+    @PutMapping("/borrowed/returned/{book-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> returnBook(
             @PathVariable("book-id") String bookId,
@@ -33,7 +33,7 @@ public class BorrowBookController {
         return ResponseEntity.ok(ResponseData.createResponse(borrowBookService.returnBook(bookId, connectedUser)));
     }
 
-    @PatchMapping("/borrowed/returned/approved/{book-id}")
+    @PutMapping("/borrowed/returned/approved/{book-id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> approveBook(
             @PathVariable("book-id") String bookId,

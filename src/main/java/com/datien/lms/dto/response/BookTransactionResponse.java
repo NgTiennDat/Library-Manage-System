@@ -13,6 +13,5 @@ public class BookTransactionResponse {
     private int totalRecords;
 
     public void setTotalPages(int totalPages) {
-
     }
 }
