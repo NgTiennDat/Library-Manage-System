@@ -79,7 +79,6 @@ public class FeedbackService {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = new Result();
         String notification = "";
-
         FeedbackResponse feedbackResponse = new FeedbackResponse();
 
         try {
@@ -123,7 +122,6 @@ public class FeedbackService {
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             notification = "Get feedback of the book failed.";
         }
-
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, feedbackResponse);
         resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
@@ -143,7 +141,6 @@ public class FeedbackService {
                 return resultExecuted;
             }
 
-            // Fetch the feedback by ID
             Optional<Feedback> feedbackOptional = feedbackRepository.findById(feedbackId);
             if (feedbackOptional.isEmpty()) {
                 result = new Result(ResponseCode.FEEDBACK_NOTFOUND.getCode(), false, ResponseCode.FEEDBACK_NOTFOUND.getMessage());
@@ -153,11 +150,9 @@ public class FeedbackService {
 
             Feedback feedback = feedbackOptional.get();
 
-            // Update feedback details
             feedbackRepository.save(feedback);
-
             resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
-            resultExecuted.put("feedback", feedback);
+            resultExecuted.put(AppConstant.RESPONSE_KEY.DATA, feedback);
 
         } catch (Exception ex) {
             logger.error("Some errors occurred while updating the feedback", ex);
