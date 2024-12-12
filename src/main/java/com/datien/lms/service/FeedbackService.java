@@ -166,7 +166,6 @@ public class FeedbackService {
     public Map<Object, Object> deleteFeedback(String feedbackId, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = new Result();
-
         try {
             var feedback = feedbackRepository.findById(feedbackId)
                     .orElseThrow(() -> new RuntimeException(ResponseCode.FEEDBACK_NOTFOUND.getCode()));
