@@ -68,7 +68,7 @@ public class EmailService {
     }
 
     private String generateAndSavedActiveCode(User user) {
-        String activateCode = generateActiveCode(6);
+        String activateCode = generateActiveCode();
 
         var otp = UserOtp.builder()
                 .code(activateCode)
@@ -81,12 +81,12 @@ public class EmailService {
         return activateCode;
     }
 
-    private String generateActiveCode(int length) {
+    private String generateActiveCode() {
         String characters = "0123456789";
         StringBuilder codeBuilder = new StringBuilder();
         SecureRandom random = new SecureRandom();
 
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < 6; i++) {
             int randomIndex = random.nextInt(characters.length());
             codeBuilder.append(characters.charAt(randomIndex));
         }
