@@ -54,7 +54,6 @@ public class AuthService {
                 return resultExecuted;
             }
 
-            // Xác thực người dùng
             var auth = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getEmail(), request.getPassword()
