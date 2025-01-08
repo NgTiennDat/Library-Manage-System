@@ -1,5 +1,7 @@
 package com.datien.lms.common;
 
+import javax.swing.text.SimpleAttributeSet;
+
 public class AppConstant {
 
     public static final int REGISTER_TOKEN_LENGTH = 12;
@@ -14,6 +16,17 @@ public class AppConstant {
     public static final String IMAGE_PREFIX = "/views/user/assets/img/avt/avt-";
     public static final String IMAGE_SUFFIX = ".jpg";
 
+    public interface SPECIAL_CHAR {
+        String SPACE = " ";
+        String SEMI_COLON = ";";
+        String COMMAS = ",";
+        String UNDER_LINE = "_";
+        String HYPHEN = "-";
+        String SLASH = "/";
+        String EMPTY = "";
+        String COLON = ":";
+        String PERCENT = "%";
+    }
     public interface RESPONSE_KEY {
         String RESULT = "RESULT_KEY";
         String DATA = "DATA_KEY";

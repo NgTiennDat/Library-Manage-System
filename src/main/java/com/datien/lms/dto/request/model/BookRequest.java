@@ -1,5 +1,7 @@
 package com.datien.lms.dto.request.model;
 
+import com.datien.lms.common.AppConstant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

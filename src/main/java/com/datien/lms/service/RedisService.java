@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
-public class    RedisService {
+public class RedisService {
 
     private final RedissonClient redissonClient;
     final int MAX_TRANSACTION_TIMEOUT = 30;
@@ -47,6 +47,11 @@ public class    RedisService {
         RMapCache<String, Object> sessionMap = redissonClient.getMapCache(SESSION_DATA_MAP);
         userSession.remove(sessionId);
         sessionMap.remove(sessionId);
+    }
+
+    public String getCheckSum(String key) {
+        RMapCache<String, String> checkSumMap = redissonClient.getMapCache(CHECKSUM_MAP);
+        return checkSumMap.get(key);
     }
 
     public SessionData getSession(String sessionId) {

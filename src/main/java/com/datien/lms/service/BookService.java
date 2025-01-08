@@ -2,6 +2,7 @@ package com.datien.lms.service;
 
 import com.datien.lms.common.AppConstant;
 import com.datien.lms.common.Result;
+import com.datien.lms.common.Utility;
 import com.datien.lms.dao.Book;
 import com.datien.lms.dao.BookTransactionHistory;
 import com.datien.lms.dao.Role;
@@ -18,6 +19,7 @@ import com.datien.lms.service.mapper.BookMapper;
 import com.datien.lms.utils.FileUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.*;
@@ -34,12 +36,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookService {
 
+    private static final String INV_CHECKSUM_KEY = "BOOK";
     private final Logger logger = LogManager.getLogger(BookService.class);
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final UserRepository userRepository;
     private final BookTransactionHistoryRepository bookTransactionHistoryRepository;
     private final FileService fileService;
+    private final RedisService redisService;
 
     public Map<Object, Object> createBook(BookRequest bookRequest, MultipartFile bookCover, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
