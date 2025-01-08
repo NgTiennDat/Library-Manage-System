@@ -11,6 +11,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import static java.io.File.separator;
 
@@ -56,11 +57,12 @@ public class FileService {
         Path targetPath = Paths.get(targetFilePath);
 
         try {
-            Files.write(targetPath, sourceFile.getBytes());
+            // Ghi dữ liệu nhị phân vào đích
+            Files.copy(sourceFile.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
             log.info("File saved to: {}", targetFilePath);
             return targetFilePath;
         } catch (Exception ex) {
-            log.error("File was not found", ex);
+            log.error("Error saving file", ex);
         }
         return null;
     }

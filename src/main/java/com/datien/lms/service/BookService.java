@@ -7,7 +7,9 @@ import com.datien.lms.dao.Book;
 import com.datien.lms.dao.BookTransactionHistory;
 import com.datien.lms.dao.Role;
 import com.datien.lms.dao.User;
+import com.datien.lms.dto.BookDto;
 import com.datien.lms.dto.BookTransactionDto;
+import com.datien.lms.dto.CreateBookDto;
 import com.datien.lms.dto.request.model.BookRequest;
 import com.datien.lms.dto.response.BookResponse;
 import com.datien.lms.dto.response.BookTransactionResponse;
@@ -17,6 +19,7 @@ import com.datien.lms.repository.BookTransactionHistoryRepository;
 import com.datien.lms.repository.UserRepository;
 import com.datien.lms.service.mapper.BookMapper;
 import com.datien.lms.utils.FileUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +48,7 @@ public class BookService {
     private final FileService fileService;
     private final RedisService redisService;
 
-    public Map<Object, Object> createBook(BookRequest bookRequest, MultipartFile bookCover, Authentication connectedUser) {
+    public Map<Object, Object> createBook(String bookRequest, MultipartFile bookCover, Authentication connectedUser) {
         Map<Object, Object> resultExecuted = new HashMap<>();
         Result result = Result.OK("");
         String notification = "";
@@ -64,29 +67,34 @@ public class BookService {
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
             }
 
-//            User user = (User) connectedUser.getPrincipal(); // Khai báo biến user ở đây
+            // Kiểm tra quyền truy cập
             if (user.getRole() == Role.STUDENT) {
                 result = new Result(ResponseCode.ACCESS_DENIED.getCode(), false, ResponseCode.ACCESS_DENIED.getMessage());
                 resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
                 return resultExecuted;
             }
 
+            // Chuyển chuỗi JSON thành đối tượng BookRequest
+            ObjectMapper objectMapper = new ObjectMapper();
+            BookRequest bookRequestObj = objectMapper.readValue(bookRequest, BookRequest.class);
+
             String bookId = UUID.randomUUID().toString();
             var book = new Book();
             book.setId(bookId);
-            book.setTitle(bookRequest.getTitle());
-            book.setAuthor(bookRequest.getAuthor());
-            book.setPublisher(bookRequest.getPublisher());
-            book.setISBN(bookRequest.getISBN());
-            book.setSynopsis(bookRequest.getSynopsis());
-            book.setPageCount(bookRequest.getPageCount());
-            book.setGenre(bookRequest.getGenre());
-            book.setAvailable(bookRequest.isAvailable());
-            book.setArchived(bookRequest.isArchived());
+            book.setTitle(bookRequestObj.getTitle());
+            book.setAuthor(bookRequestObj.getAuthor());
+            book.setPublisher(bookRequestObj.getPublisher());
+            book.setISBN(bookRequestObj.getISBN());
+            book.setSynopsis(bookRequestObj.getSynopsis());
+            book.setPageCount(bookRequestObj.getPageCount());
+            book.setGenre(bookRequestObj.getGenre());
+            book.setAvailable(bookRequestObj.isAvailable());
+            book.setArchived(bookRequestObj.isArchived());
             book.setCreatedBy(user.getId());
             book.setCreatedAt(LocalDateTime.now());
             book.setLastModifiedBy(user.getUsername());
 
+            // Lưu ảnh bìa sách
             String coverPath = fileService.saveFile(bookCover, user.getId());
             if(coverPath == null) {
                 result = new Result(ResponseCode.PATH_NOT_FOUND.getCode(), false, ResponseCode.PATH_NOT_FOUND.getMessage());
@@ -95,8 +103,13 @@ public class BookService {
             }
             book.setBookCover(coverPath);
 
+            // Lưu book vào database
             bookRepository.save(book);
             notification = "Successfully added book.";
+
+            // Chuyển đổi Book thành BookDto
+            CreateBookDto bookDto = convertToBookDto(book);
+            resultExecuted.put("book", bookDto);
 
         } catch (Exception ex) {
             logger.error("Some errors occurs when adding a book.", ex);
@@ -110,6 +123,7 @@ public class BookService {
         resultExecuted.put(AppConstant.RESPONSE_KEY.NOTIFICATION, notification);
         return resultExecuted;
     }
+
 
     public Map<Object, Object> getAllBook(int page, int size) {
         Map<Object, Object> resultExecuted = new HashMap<>();
@@ -333,4 +347,27 @@ public class BookService {
         resultExecuted.put(AppConstant.RESPONSE_KEY.RESULT, result);
         return resultExecuted;
     }
+
+    public CreateBookDto convertToBookDto(Book book) {
+        if (book == null) {
+            return null; // Nếu book là null, trả về null.
+        }
+
+        // Tạo đối tượng BookDto và gán các giá trị từ Book
+        CreateBookDto bookDto = new CreateBookDto();
+        bookDto.setId(book.getId());
+        bookDto.setTitle(book.getTitle());
+        bookDto.setAuthor(book.getAuthor());
+        bookDto.setPublisher(book.getPublisher());
+        bookDto.setISBN(book.getISBN());
+        bookDto.setSynopsis(book.getSynopsis());
+        bookDto.setPageCount(book.getPageCount());
+        bookDto.setGenre(book.getGenre());
+        bookDto.setAvailable(book.isAvailable());
+        bookDto.setArchived(book.isArchived());
+        bookDto.setBookCover(book.getBookCover());
+
+        return bookDto;
+    }
+
 }

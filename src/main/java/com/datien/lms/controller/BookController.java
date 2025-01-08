@@ -6,6 +6,7 @@ import com.datien.lms.service.BookService;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -28,12 +29,12 @@ public class BookController {
         return ResponseEntity.ok(ResponseData.createResponse(bookService.getAllBook(page, size)));
     }
 
-    @PostMapping("/create")
-    @PreAuthorize("hasAnyAuthority('admin::create')")
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    @PreAuthorize("hasAnyAuthority('admin::create')")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createBook(
-            @RequestPart("bookRequest") BookRequest bookRequest,
-            @RequestPart("bookCover") MultipartFile bookCover,
+            @RequestParam("bookRequest") String bookRequest,
+            @RequestParam("bookCover") MultipartFile bookCover,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(bookService.createBook(bookRequest, bookCover, connectedUser)));
