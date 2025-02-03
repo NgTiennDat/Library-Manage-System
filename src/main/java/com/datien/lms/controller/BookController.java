@@ -30,7 +30,7 @@ public class BookController {
     }
 
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    @PreAuthorize("hasAnyAuthority('admin::create')")
+    @PreAuthorize("hasAnyAuthority('admin::create')")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createBook(
             @RequestParam("bookRequest") String bookRequest,
@@ -52,6 +52,7 @@ public class BookController {
     }
 
     @GetMapping("/{book-id}")
+    @PreAuthorize("permitAll()")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> getBook(
             @PathVariable("book-id") String bookId
