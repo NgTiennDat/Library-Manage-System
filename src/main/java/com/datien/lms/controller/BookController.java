@@ -103,5 +103,4 @@ public class BookController {
     ) {
         return ResponseEntity.ok(ResponseData.createResponse(bookService.uploadBookCoverPicture (file, connectedUser, bookId)));
     }
-
 }
