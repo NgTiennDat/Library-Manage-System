@@ -30,11 +30,9 @@ public class UserTokenService {
 
     public void revokeAllUserTokens(User user) {
         var validUserToken = tokenRepository.findAllValidTokenByUser(user.getId());
-
         if(validUserToken.isEmpty()) {
             return;
         }
-
         validUserToken.forEach(token -> {
             token.setExpired(true);
             token.setRevoked(true);
